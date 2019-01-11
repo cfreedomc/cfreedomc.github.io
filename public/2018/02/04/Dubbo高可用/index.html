@@ -106,7 +106,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="dubbo,">
 
 
 
@@ -117,17 +117,24 @@
 
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="description" content="本篇主要介绍Dubbo的高可用功能,主要包含注册中心异常,Dubbo负载均衡以及在高并发以及网络错误下Dubbo提供的解决方案;">
+<meta name="keywords" content="dubbo">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2019/01/03/hello-world/index.html">
+<meta property="og:title" content="Dubbo系列-7-Dubbo高可用">
+<meta property="og:url" content="http://yoursite.com/2018/02/04/Dubbo高可用/index.html">
 <meta property="og:site_name" content="Cfreedomc&#39;s Blog">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="本篇主要介绍Dubbo的高可用功能,主要包含注册中心异常,Dubbo负载均衡以及在高并发以及网络错误下Dubbo提供的解决方案;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-03T12:18:38.333Z">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/randomLoanBalance.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/roundRobinLoanBalance.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/leastActive%20LoanBalance.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/ConsistentHashLoanBalance.png">
+<meta property="og:updated_time" content="2019-01-11T05:37:16.987Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="twitter:title" content="Dubbo系列-7-Dubbo高可用">
+<meta name="twitter:description" content="本篇主要介绍Dubbo的高可用功能,主要包含注册中心异常,Dubbo负载均衡以及在高并发以及网络错误下Dubbo提供的解决方案;">
+<meta name="twitter:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
 
 
 
@@ -157,13 +164,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/01/03/hello-world/">
+  <link rel="canonical" href="http://yoursite.com/2018/02/04/Dubbo高可用/">
 
 
 
 
 
-  <title>Hello World | Cfreedomc's Blog</title>
+  <title>Dubbo系列-7-Dubbo高可用 | Cfreedomc's Blog</title>
   
 
 
@@ -332,12 +339,12 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/03/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/04/Dubbo高可用/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="cfreedomc">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
@@ -349,7 +356,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">Dubbo系列-7-Dubbo高可用</h1>
         
 
         <div class="post-meta">
@@ -361,8 +368,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-03T20:30:26+08:00">
-                2019-01-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-04T00:00:00+08:00">
+                2018-02-04
               </time>
             
 
@@ -399,15 +406,131 @@
       
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+        <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png" alt="图片"></p>
+<blockquote>
+<p>本篇主要介绍Dubbo的高可用功能,主要包含注册中心异常,Dubbo负载均衡以及在高并发以及网络错误下Dubbo提供的解决方案;</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="zookeeper宕机和dubbo直连"><a href="#zookeeper宕机和dubbo直连" class="headerlink" title="zookeeper宕机和dubbo直连"></a>zookeeper宕机和dubbo直连</h2><ul>
+<li>zookeeper宕机</li>
+</ul>
+<p>当消费者通过zookeeper找到提供者并成功调用后,如果在此刻zookeeper宕机是不会影响连接的,因为会存在本地缓存,消费者通过本地缓存直接调用提供者</p>
+<ul>
+<li>dubbo直连<ul>
+<li>指定消费者引用的url可以进行dubbo直连<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@Reference(url = &quot;127.0.0.1:28080&quot;)</span><br><span class="line">UserService userService;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<p>ps:<br>zookeeper宕机后,消费者是可以继续调用的,因为有本地缓存<br>dubbo是支持直连的</p>
+<hr>
+<h2 id="Dubbo的负载均衡"><a href="#Dubbo的负载均衡" class="headerlink" title="Dubbo的负载均衡"></a>Dubbo的负载均衡</h2><ul>
+<li>dubbo的负载均衡类型<ul>
+<li>Random LoanBalance 基于<strong>权重</strong>随机负载均衡<ul>
+<li>根据权重随机</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://pl5cg4rhb.bkt.clouddn.com/randomLoanBalance.png" alt="图片"></p>
+<ul>
+<li>RoundRobin LoadBalance 基于权重的<strong>轮询</strong>负载均衡<ul>
+<li>在轮询基础上增加权重</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://pl5cg4rhb.bkt.clouddn.com/roundRobinLoanBalance.png" alt="图片"></p>
+<ul>
+<li>LeastActive LoadBalance 最少活跃数负载均衡<ul>
+<li>调用延迟最低的服务</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://pl5cg4rhb.bkt.clouddn.com/leastActive%20LoanBalance.png" alt="图片"></p>
+<ul>
+<li>ConsistentHash LoadBalance 一致性Hash<ul>
+<li>根据Hash值决定调用机器</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://pl5cg4rhb.bkt.clouddn.com/ConsistentHashLoanBalance.png" alt="图片"></p>
+<ul>
+<li><p>权重的配置</p>
+<ul>
+<li><p>消费者配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-- 接口级别</span><br><span class="line">&lt;dubbo:reference interface=&quot;...&quot; loadbalance=&quot;roundrobin&quot; /&gt;</span><br><span class="line">-- 方法级别</span><br><span class="line">&lt;dubbo:reference interface=&quot;...&quot;&gt;</span><br><span class="line">    &lt;dubbo:method name=&quot;...&quot; loadbalance=&quot;roundrobin&quot;/&gt;</span><br><span class="line">&lt;/dubbo:reference&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>提供者配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-- 接口级别</span><br><span class="line">&lt;dubbo:service interface=&quot;...&quot; loadbalance=&quot;roundrobin&quot; /&gt;</span><br><span class="line">-- 方法级别</span><br><span class="line">&lt;dubbo:service interface=&quot;...&quot;&gt;</span><br><span class="line">    &lt;dubbo:method name=&quot;...&quot; loadbalance=&quot;roundrobin&quot;/&gt;</span><br><span class="line">&lt;/dubbo:service&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="服务降级"><a href="#服务降级" class="headerlink" title="服务降级"></a>服务降级</h2><ul>
+<li>服务降级概念<ul>
+<li>当服务器访问量巨大时,无法正常的完成所有服务的响应,可以通过简单处理或关闭服务器中某些不重要的服务,来满足核心业务的高可用;</li>
+</ul>
+</li>
+<li>服务降级类型<ul>
+<li>mock=force:Return+null<ul>
+<li>直接在消费者端,强制对某个服务返回null;</li>
+</ul>
+</li>
+<li>mock=fail:Return+null<ul>
+<li>需要调用提供者,当提供者返回失败时(超时等情况)返回null;</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>服务降级操作<ul>
+<li>在dubbo的监控系统中可以设置<ul>
+<li>屏蔽:mock=force</li>
+<li>容错:mock=fail</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="服务容错"><a href="#服务容错" class="headerlink" title="服务容错"></a>服务容错</h2><ul>
+<li>概念<ul>
+<li>服务调用错误后的处理手段；</li>
+</ul>
+</li>
+<li>服务容错类型<ul>
+<li>Failover Cluster<ul>
+<li>失败自动切换重试其他服务器；</li>
+</ul>
+</li>
+<li>Failfast Cluster<ul>
+<li>快速失败，只发起一次，适合于非幂等性操作；</li>
+</ul>
+</li>
+<li>Failsafe Cluster<ul>
+<li>失败吞掉异常，忽略，但在审计日志中展现；</li>
+</ul>
+</li>
+<li>Failback Cluster<ul>
+<li>失败自动重试；</li>
+</ul>
+</li>
+<li>Forking Cluster<ul>
+<li>并行调用，一次成功则成功；</li>
+</ul>
+</li>
+<li>Broadcast Cluster<ul>
+<li>串行调用，全成功则成功；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Hystrix整合<ul>
+<li>待续</li>
+</ul>
+</li>
+</ul>
 
       
     </div>
@@ -423,6 +546,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/dubbo/" rel="tag"># dubbo</a>
+          
+        </div>
+      
 
       
       
@@ -432,15 +561,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/02/04/分布式系统基础/" rel="next" title="分布式系统">
-                <i class="fa fa-chevron-left"></i> 分布式系统
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/11/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -505,6 +634,8 @@
       <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="cfreedomc">
             
               <p class="site-author-name" itemprop="name">cfreedomc</p>
               <p class="site-description motion-element" itemprop="description"></p>
@@ -573,7 +704,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#zookeeper宕机和dubbo直连"><span class="nav-number">1.</span> <span class="nav-text">zookeeper宕机和dubbo直连</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dubbo的负载均衡"><span class="nav-number">2.</span> <span class="nav-text">Dubbo的负载均衡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务降级"><span class="nav-number">3.</span> <span class="nav-text">服务降级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务容错"><span class="nav-number">4.</span> <span class="nav-text">服务容错</span></a></li></ol></div>
             
 
           </div>
