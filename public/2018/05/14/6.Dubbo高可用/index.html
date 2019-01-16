@@ -117,20 +117,24 @@
 
 
 
-<meta name="description" content="本文主要介绍了Dubbo主要支持的配置类型,并作出简单的事例以及分析">
+<meta name="description" content="本篇主要介绍Dubbo的高可用功能,主要包含注册中心异常,Dubbo负载均衡以及在高并发以及网络错误下Dubbo提供的解决方案;">
 <meta name="keywords" content="dubbo">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Dubbo系列-5-Dubbo配置方式介绍">
-<meta property="og:url" content="http://yoursite.com/2018/05/04/Dubbo的配置方式/index.html">
+<meta property="og:title" content="Dubbo系列-7-Dubbo高可用">
+<meta property="og:url" content="http://yoursite.com/2018/05/14/6.Dubbo高可用/index.html">
 <meta property="og:site_name" content="Cfreedomc&#39;s Blog">
-<meta property="og:description" content="本文主要介绍了Dubbo主要支持的配置类型,并作出简单的事例以及分析">
+<meta property="og:description" content="本篇主要介绍Dubbo的高可用功能,主要包含注册中心异常,Dubbo负载均衡以及在高并发以及网络错误下Dubbo提供的解决方案;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo5page.png">
-<meta property="og:updated_time" content="2019-01-14T14:20:55.727Z">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/randomLoanBalance.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/roundRobinLoanBalance.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/leastActive%20LoanBalance.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/ConsistentHashLoanBalance.png">
+<meta property="og:updated_time" content="2019-01-15T09:12:25.289Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Dubbo系列-5-Dubbo配置方式介绍">
-<meta name="twitter:description" content="本文主要介绍了Dubbo主要支持的配置类型,并作出简单的事例以及分析">
-<meta name="twitter:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo5page.png">
+<meta name="twitter:title" content="Dubbo系列-7-Dubbo高可用">
+<meta name="twitter:description" content="本篇主要介绍Dubbo的高可用功能,主要包含注册中心异常,Dubbo负载均衡以及在高并发以及网络错误下Dubbo提供的解决方案;">
+<meta name="twitter:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
 
 
 
@@ -160,13 +164,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/05/04/Dubbo的配置方式/">
+  <link rel="canonical" href="http://yoursite.com/2018/05/14/6.Dubbo高可用/">
 
 
 
 
 
-  <title>Dubbo系列-5-Dubbo配置方式介绍 | Cfreedomc's Blog</title>
+  <title>Dubbo系列-7-Dubbo高可用 | Cfreedomc's Blog</title>
   
 
 
@@ -335,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/04/Dubbo的配置方式/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/14/6.Dubbo高可用/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="cfreedomc">
@@ -352,7 +356,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Dubbo系列-5-Dubbo配置方式介绍</h1>
+          <h1 class="post-title" itemprop="name headline">Dubbo系列-7-Dubbo高可用</h1>
         
 
         <div class="post-meta">
@@ -364,8 +368,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-04T00:00:00+08:00">
-                2018-05-04
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-14T00:00:00+08:00">
+                2018-05-14
               </time>
             
 
@@ -402,96 +406,128 @@
       
 
       
-        <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo5page.png" alt="图片"></p>
+        <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png" alt="图片"></p>
 <blockquote>
-<p>本文主要介绍了Dubbo主要支持的配置类型,并作出简单的事例以及分析</p>
+<p>本篇主要介绍Dubbo的高可用功能,主要包含注册中心异常,Dubbo负载均衡以及在高并发以及网络错误下Dubbo提供的解决方案;</p>
 </blockquote>
 <a id="more"></a>
-<hr>
-<h2 id="配置类型"><a href="#配置类型" class="headerlink" title="配置类型"></a>配置类型</h2><p>Dubbo主要提供了4种配置方式,分别是以下:</p>
+<h2 id="zookeeper宕机和dubbo直连"><a href="#zookeeper宕机和dubbo直连" class="headerlink" title="zookeeper宕机和dubbo直连"></a>zookeeper宕机和dubbo直连</h2><ul>
+<li>zookeeper宕机</li>
+</ul>
+<p>当消费者通过zookeeper找到提供者并成功调用后,如果在此刻zookeeper宕机是不会影响连接的,因为会存在本地缓存,消费者通过本地缓存直接调用提供者</p>
 <ul>
-<li>xml配置</li>
-<li>属性配置</li>
-<li>API配置</li>
-<li>注解配置</li>
+<li>dubbo直连<ul>
+<li>指定消费者引用的url可以进行dubbo直连<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@Reference(url = &quot;127.0.0.1:28080&quot;)</span><br><span class="line">UserService userService;</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
-<p>细节可以查询dubbo官方文档介绍:<a href="http://dubbo.apache.org/zh-cn/docs/user/configuration/xml.html" target="_blank" rel="noopener">dubbo官网链接</a></p>
+</li>
+</ul>
+<p>ps:<br>zookeeper宕机后,消费者是可以继续调用的,因为有本地缓存<br>dubbo是支持直连的</p>
 <hr>
-<h2 id="四种配置方式"><a href="#四种配置方式" class="headerlink" title="四种配置方式"></a>四种配置方式</h2><h3 id="xml方式"><a href="#xml方式" class="headerlink" title="xml方式"></a>xml方式</h3><ul>
-<li>配置前置条件(<a href="http://dubbo.apache.org/zh-cn/docs/user/configuration/xml.html" target="_blank" rel="noopener">dubbo文档链接</a>)<ul>
-<li>创建dubbo.*.xml配置文件</li>
-<li>程序启动加载对应xml的配置文件</li>
+<h2 id="Dubbo的负载均衡"><a href="#Dubbo的负载均衡" class="headerlink" title="Dubbo的负载均衡"></a>Dubbo的负载均衡</h2><ul>
+<li>dubbo的负载均衡类型<ul>
+<li>Random LoanBalance 基于<strong>权重</strong>随机负载均衡<ul>
+<li>根据权重随机</li>
 </ul>
 </li>
-<li>.xml举例<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">    xmlns:dubbo=&quot;http://dubbo.apache.org/schema/dubbo&quot;</span><br><span class="line">    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd&quot;&gt;  </span><br><span class="line">    &lt;dubbo:application name=&quot;hello-world-app&quot;  /&gt;  </span><br><span class="line">    &lt;dubbo:registry address=&quot;multicast://224.5.6.7:1234&quot; /&gt;  </span><br><span class="line">    &lt;dubbo:protocol name=&quot;dubbo&quot; port=&quot;20880&quot; /&gt;  </span><br><span class="line">    &lt;dubbo:service interface=&quot;org.apache.dubbo.demo.DemoService&quot; ref=&quot;demoServiceLocal&quot; /&gt;  </span><br><span class="line">    &lt;dubbo:reference id=&quot;demoServiceRemote&quot; interface=&quot;org.apache.dubbo.demo.DemoService&quot; /&gt;  </span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="属性方式"><a href="#属性方式" class="headerlink" title="属性方式"></a>属性方式</h3><ul>
-<li>配置前置条件<ul>
-<li>创建dubbo.properties配置文件</li>
-<li>spring boot会自动读取properties文件内容</li>
 </ul>
 </li>
-<li>.properties举例<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dubbo.application.name=foo</span><br><span class="line">dubbo.application.owner=bar</span><br><span class="line">dubbo.registry.address=10.20.153.10:9090</span><br></pre></td></tr></table></figure>
-</li>
 </ul>
-<h3 id="API方式"><a href="#API方式" class="headerlink" title="API方式"></a>API方式</h3><ul>
-<li>配置前置条件<ul>
-<li>创建ConfigClass或在boot的main函数编写</li>
-</ul>
-</li>
-<li>举例<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 服务实现</span><br><span class="line">XxxService xxxService = new XxxServiceImpl();</span><br><span class="line"> </span><br><span class="line">// 当前应用配置</span><br><span class="line">ApplicationConfig application = new ApplicationConfig();</span><br><span class="line">application.setName(&quot;xxx&quot;);</span><br><span class="line"> </span><br><span class="line">// 连接注册中心配置</span><br><span class="line">RegistryConfig registry = new RegistryConfig();</span><br><span class="line">registry.setAddress(&quot;10.20.130.230:9090&quot;);</span><br><span class="line">registry.setUsername(&quot;aaa&quot;);</span><br><span class="line">registry.setPassword(&quot;bbb&quot;);</span><br><span class="line"> </span><br><span class="line">// 服务提供者协议配置</span><br><span class="line">ProtocolConfig protocol = new ProtocolConfig();</span><br><span class="line">protocol.setName(&quot;dubbo&quot;);</span><br><span class="line">protocol.setPort(12345);</span><br><span class="line">protocol.setThreads(200);</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="注解方式"><a href="#注解方式" class="headerlink" title="注解方式"></a>注解方式</h3><ul>
-<li>配置前置条件<ul>
-<li>启动Application增加@EnableDubbo</li>
+<p><img src="http://pl5cg4rhb.bkt.clouddn.com/randomLoanBalance.png" alt="图片"></p>
+<ul>
+<li>RoundRobin LoadBalance 基于权重的<strong>轮询</strong>负载均衡<ul>
+<li>在轮询基础上增加权重</li>
 </ul>
 </li>
-<li>举例<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@Service(timeout = 1000)</span><br><span class="line">@Component</span><br><span class="line">public class UserServiceImpl implements UserService &#123;</span><br></pre></td></tr></table></figure>
+</ul>
+<p><img src="http://pl5cg4rhb.bkt.clouddn.com/roundRobinLoanBalance.png" alt="图片"></p>
+<ul>
+<li>LeastActive LoadBalance 最少活跃数负载均衡<ul>
+<li>调用延迟最低的服务</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://pl5cg4rhb.bkt.clouddn.com/leastActive%20LoanBalance.png" alt="图片"></p>
+<ul>
+<li>ConsistentHash LoadBalance 一致性Hash<ul>
+<li>根据Hash值决定调用机器</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://pl5cg4rhb.bkt.clouddn.com/ConsistentHashLoanBalance.png" alt="图片"></p>
+<ul>
+<li><p>权重的配置</p>
+<ul>
+<li><p>消费者配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-- 接口级别</span><br><span class="line">&lt;dubbo:reference interface=&quot;...&quot; loadbalance=&quot;roundrobin&quot; /&gt;</span><br><span class="line">-- 方法级别</span><br><span class="line">&lt;dubbo:reference interface=&quot;...&quot;&gt;</span><br><span class="line">    &lt;dubbo:method name=&quot;...&quot; loadbalance=&quot;roundrobin&quot;/&gt;</span><br><span class="line">&lt;/dubbo:reference&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>提供者配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-- 接口级别</span><br><span class="line">&lt;dubbo:service interface=&quot;...&quot; loadbalance=&quot;roundrobin&quot; /&gt;</span><br><span class="line">-- 方法级别</span><br><span class="line">&lt;dubbo:service interface=&quot;...&quot;&gt;</span><br><span class="line">    &lt;dubbo:method name=&quot;...&quot; loadbalance=&quot;roundrobin&quot;/&gt;</span><br><span class="line">&lt;/dubbo:service&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
 </li>
 </ul>
 <hr>
-<h2 id="配置方式比较"><a href="#配置方式比较" class="headerlink" title="配置方式比较"></a>配置方式比较</h2><h3 id="配置能力比较"><a href="#配置能力比较" class="headerlink" title="配置能力比较"></a>配置能力比较</h3><ul>
-<li>xml:<ul>
-<li>优势:所有的功能都能通过xml的方式进行配置,如方法级别的timeout等</li>
-<li>缺点:<ul>
-<li>需要专门编写xml文件,编写相对繁琐</li>
-<li>就算不整合spring boot,原有spring也支持这种方式配置</li>
-<li>效率低</li>
+<h2 id="服务降级"><a href="#服务降级" class="headerlink" title="服务降级"></a>服务降级</h2><ul>
+<li>服务降级概念<ul>
+<li>当服务器访问量巨大时,无法正常的完成所有服务的响应,可以通过简单处理或关闭服务器中某些不重要的服务,来满足核心业务的高可用;</li>
+</ul>
+</li>
+<li>服务降级类型<ul>
+<li>mock=force:Return+null<ul>
+<li>直接在消费者端,强制对某个服务返回null;</li>
+</ul>
+</li>
+<li>mock=fail:Return+null<ul>
+<li>需要调用提供者,当提供者返回失败时(超时等情况)返回null;</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>属性:<ul>
-<li>优势:统一配置</li>
-<li>缺点:仅用于缺省配置情况加多</li>
+<li>服务降级操作<ul>
+<li>在dubbo的监控系统中可以设置<ul>
+<li>屏蔽:mock=force</li>
+<li>容错:mock=fail</li>
 </ul>
 </li>
-<li>注解:<ul>
-<li>优势:方便</li>
-<li>缺点:不支持方法级别的配置,效率低</li>
 </ul>
 </li>
-<li>API:<ul>
-<li>优势:配置形式清楚,所有配置都支持,效率高</li>
-<li>缺点:配置比xml更加繁琐<h3 id="使用场景推荐"><a href="#使用场景推荐" class="headerlink" title="使用场景推荐"></a>使用场景推荐</h3></li>
+</ul>
+<hr>
+<h2 id="服务容错"><a href="#服务容错" class="headerlink" title="服务容错"></a>服务容错</h2><ul>
+<li>概念<ul>
+<li>服务调用错误后的处理手段；</li>
 </ul>
 </li>
-<li>xml方式<ul>
-<li>用于普通服务提供方或消费方(日常使用)</li>
+<li>服务容错类型<ul>
+<li>Failover Cluster<ul>
+<li>失败自动切换重试其他服务器；</li>
 </ul>
 </li>
-<li>属性方式:<ul>
-<li>多用于缺省配置(公共内容)</li>
+<li>Failfast Cluster<ul>
+<li>快速失败，只发起一次，适合于非幂等性操作；</li>
 </ul>
 </li>
-<li>API方式:<ul>
-<li>API 仅用于 OpenAPI, ESB, Test, Mock 等系统集成，普通服务提供方或消费方，请采用<a href="http://dubbo.apache.org/zh-cn/docs/user/configuration/xml.html" target="_blank" rel="noopener">XML 配置</a>方式使用 Dubbo</li>
+<li>Failsafe Cluster<ul>
+<li>失败吞掉异常，忽略，但在审计日志中展现；</li>
 </ul>
 </li>
-<li>注解方式:<ul>
-<li>dubbo2.5.7支持,适用于普通服务提供方或消费方;</li>
+<li>Failback Cluster<ul>
+<li>失败自动重试；</li>
+</ul>
+</li>
+<li>Forking Cluster<ul>
+<li>并行调用，一次成功则成功；</li>
+</ul>
+</li>
+<li>Broadcast Cluster<ul>
+<li>串行调用，全成功则成功；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Hystrix整合<ul>
+<li>待续</li>
 </ul>
 </li>
 </ul>
@@ -525,8 +561,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/02/04/Dubbo高可用/" rel="next" title="Dubbo系列-7-Dubbo高可用">
-                <i class="fa fa-chevron-left"></i> Dubbo系列-7-Dubbo高可用
+              <a href="/2018/05/10/5.Dubbo的细节配置/" rel="next" title="Dubbo系列-6-Dubbo配置细节介绍">
+                <i class="fa fa-chevron-left"></i> Dubbo系列-6-Dubbo配置细节介绍
               </a>
             
           </div>
@@ -534,10 +570,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/10/Dubbo的细节配置/" rel="prev" title="Dubbo系列-6-Dubbo配置细节介绍">
-                Dubbo系列-6-Dubbo配置细节介绍 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -616,7 +648,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -672,7 +704,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置类型"><span class="nav-number">1.</span> <span class="nav-text">配置类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四种配置方式"><span class="nav-number">2.</span> <span class="nav-text">四种配置方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#xml方式"><span class="nav-number">2.1.</span> <span class="nav-text">xml方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#属性方式"><span class="nav-number">2.2.</span> <span class="nav-text">属性方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#API方式"><span class="nav-number">2.3.</span> <span class="nav-text">API方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注解方式"><span class="nav-number">2.4.</span> <span class="nav-text">注解方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置方式比较"><span class="nav-number">3.</span> <span class="nav-text">配置方式比较</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置能力比较"><span class="nav-number">3.1.</span> <span class="nav-text">配置能力比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用场景推荐"><span class="nav-number">3.2.</span> <span class="nav-text">使用场景推荐</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#zookeeper宕机和dubbo直连"><span class="nav-number">1.</span> <span class="nav-text">zookeeper宕机和dubbo直连</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dubbo的负载均衡"><span class="nav-number">2.</span> <span class="nav-text">Dubbo的负载均衡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务降级"><span class="nav-number">3.</span> <span class="nav-text">服务降级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务容错"><span class="nav-number">4.</span> <span class="nav-text">服务容错</span></a></li></ol></div>
             
 
           </div>

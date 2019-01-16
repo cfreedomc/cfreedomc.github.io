@@ -117,24 +117,23 @@
 
 
 
-<meta name="description" content="本篇主要介绍Dubbo的高可用功能,主要包含注册中心异常,Dubbo负载均衡以及在高并发以及网络错误下Dubbo提供的解决方案;">
+<meta name="description" content="本文主要介绍了Dubbo主要的细节属性配置以及相关配置的优先级等情况;">
 <meta name="keywords" content="dubbo">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Dubbo系列-7-Dubbo高可用">
-<meta property="og:url" content="http://yoursite.com/2018/02/04/Dubbo高可用/index.html">
+<meta property="og:title" content="Dubbo系列-6-Dubbo配置细节介绍">
+<meta property="og:url" content="http://yoursite.com/2018/05/10/5.Dubbo的细节配置/index.html">
 <meta property="og:site_name" content="Cfreedomc&#39;s Blog">
-<meta property="og:description" content="本篇主要介绍Dubbo的高可用功能,主要包含注册中心异常,Dubbo负载均衡以及在高并发以及网络错误下Dubbo提供的解决方案;">
+<meta property="og:description" content="本文主要介绍了Dubbo主要的细节属性配置以及相关配置的优先级等情况;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/randomLoanBalance.png">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/roundRobinLoanBalance.png">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/leastActive%20LoanBalance.png">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/ConsistentHashLoanBalance.png">
-<meta property="og:updated_time" content="2019-01-14T14:20:55.728Z">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6.jpg">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6-1.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6-2.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6-3.png">
+<meta property="og:updated_time" content="2019-01-15T09:12:26.688Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Dubbo系列-7-Dubbo高可用">
-<meta name="twitter:description" content="本篇主要介绍Dubbo的高可用功能,主要包含注册中心异常,Dubbo负载均衡以及在高并发以及网络错误下Dubbo提供的解决方案;">
-<meta name="twitter:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
+<meta name="twitter:title" content="Dubbo系列-6-Dubbo配置细节介绍">
+<meta name="twitter:description" content="本文主要介绍了Dubbo主要的细节属性配置以及相关配置的优先级等情况;">
+<meta name="twitter:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6.jpg">
 
 
 
@@ -164,13 +163,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/02/04/Dubbo高可用/">
+  <link rel="canonical" href="http://yoursite.com/2018/05/10/5.Dubbo的细节配置/">
 
 
 
 
 
-  <title>Dubbo系列-7-Dubbo高可用 | Cfreedomc's Blog</title>
+  <title>Dubbo系列-6-Dubbo配置细节介绍 | Cfreedomc's Blog</title>
   
 
 
@@ -339,7 +338,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/04/Dubbo高可用/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/10/5.Dubbo的细节配置/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="cfreedomc">
@@ -356,7 +355,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Dubbo系列-7-Dubbo高可用</h1>
+          <h1 class="post-title" itemprop="name headline">Dubbo系列-6-Dubbo配置细节介绍</h1>
         
 
         <div class="post-meta">
@@ -368,8 +367,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-04T00:00:00+08:00">
-                2018-02-04
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-10T00:00:00+08:00">
+                2018-05-10
               </time>
             
 
@@ -406,129 +405,35 @@
       
 
       
-        <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png" alt="图片"></p>
+        <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6.jpg" alt="图片"></p>
 <blockquote>
-<p>本篇主要介绍Dubbo的高可用功能,主要包含注册中心异常,Dubbo负载均衡以及在高并发以及网络错误下Dubbo提供的解决方案;</p>
+<p>本文主要介绍了Dubbo主要的细节属性配置以及相关配置的优先级等情况;</p>
 </blockquote>
 <a id="more"></a>
-<h2 id="zookeeper宕机和dubbo直连"><a href="#zookeeper宕机和dubbo直连" class="headerlink" title="zookeeper宕机和dubbo直连"></a>zookeeper宕机和dubbo直连</h2><ul>
-<li>zookeeper宕机</li>
-</ul>
-<p>当消费者通过zookeeper找到提供者并成功调用后,如果在此刻zookeeper宕机是不会影响连接的,因为会存在本地缓存,消费者通过本地缓存直接调用提供者</p>
+<h3 id="配置文件的优先级"><a href="#配置文件的优先级" class="headerlink" title="配置文件的优先级"></a>配置文件的优先级</h3><p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6-1.png" alt="图片"><br>在dubbo属性配置中</p>
 <ul>
-<li>dubbo直连<ul>
-<li>指定消费者引用的url可以进行dubbo直连<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@Reference(url = &quot;127.0.0.1:28080&quot;)</span><br><span class="line">UserService userService;</span><br></pre></td></tr></table></figure>
+<li>-D的直接加载是优先级最高的</li>
+<li>随后是xml格式的dubbo(在这里xml格式的dubbo.xml是等价于spring boot里的application.properties的)</li>
+<li>最后是dubbo.properties文件<h3 id="启动时检查"><a href="#启动时检查" class="headerlink" title="启动时检查"></a>启动时检查</h3>该功能主要是用于当没有提供者出现,消费者端也可以模拟启动<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#消费端不检查某个服务</span><br><span class="line">dubbo.reference.com.foo.BarService.check=false</span><br><span class="line">#消费端引用统一不检查</span><br><span class="line">dubbo.reference.check=false</span><br><span class="line"></span><br><span class="line">dubbo.consumer.check=false</span><br><span class="line">#注册中心不检查,</span><br><span class="line">#官方:关闭注册中心启动时检查 (注册订阅失败时报错)</span><br><span class="line">#实际操作,一般都会检查不断重连</span><br><span class="line">dubbo.registry.check=false</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-</li>
-</ul>
-<p>ps:<br>zookeeper宕机后,消费者是可以继续调用的,因为有本地缓存<br>dubbo是支持直连的</p>
-<hr>
-<h2 id="Dubbo的负载均衡"><a href="#Dubbo的负载均衡" class="headerlink" title="Dubbo的负载均衡"></a>Dubbo的负载均衡</h2><ul>
-<li>dubbo的负载均衡类型<ul>
-<li>Random LoanBalance 基于<strong>权重</strong>随机负载均衡<ul>
-<li>根据权重随机</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><img src="http://pl5cg4rhb.bkt.clouddn.com/randomLoanBalance.png" alt="图片"></p>
+<h3 id="超时设置-timeout属性"><a href="#超时设置-timeout属性" class="headerlink" title="超时设置 timeout属性"></a>超时设置 timeout属性</h3><p>超过超时时间会认为连接失败,主要的是要了解配置超时属性的优先级(如timeout,retries, loadbalance, actives等属性)</p>
 <ul>
-<li>RoundRobin LoadBalance 基于权重的<strong>轮询</strong>负载均衡<ul>
-<li>在轮询基础上增加权重</li>
+<li>细粒度高的设置优先</li>
+<li>细粒度相同,消费端优先(消费端都不介意,提供者就不要多BB了)</li>
 </ul>
-</li>
-</ul>
-<p><img src="http://pl5cg4rhb.bkt.clouddn.com/roundRobinLoanBalance.png" alt="图片"></p>
+<p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6-2.png" alt="图片"></p>
+<h3 id="重试次数retries"><a href="#重试次数retries" class="headerlink" title="重试次数retries"></a>重试次数retries</h3><p>重试次数注意点:</p>
 <ul>
-<li>LeastActive LoadBalance 最少活跃数负载均衡<ul>
-<li>调用延迟最低的服务</li>
+<li>如果设置3,其真实重试次数就是3+1,最开始的一次不计入总次数中</li>
+<li>支持重试的服务要求其操作是幂等的操作,这点很重要,如是insert操作等是不推荐重试</li>
+<li>如果有提供者集群,dubbo默认配置会调用2次失败后切换<h3 id="版本控制"><a href="#版本控制" class="headerlink" title="版本控制"></a>版本控制</h3>可以通过在service和reference中配置version,可以约定提供者和消费者的调用版本</li>
 </ul>
-</li>
-</ul>
-<p><img src="http://pl5cg4rhb.bkt.clouddn.com/leastActive%20LoanBalance.png" alt="图片"></p>
+<h3 id="stub本地存根"><a href="#stub本地存根" class="headerlink" title="stub本地存根"></a>stub本地存根</h3><p><a href="http://dubbo.apache.org/zh-cn/docs/user/demos/local-stub.html" target="_blank" rel="noopener">链接</a><br><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6-3.png" alt="图片"><br>存根的目的:希望消费者在调用服务时做出自己的一点贡献,比如常用的参数校验等情况,保证参数正常后再真正的调用远程的服务<br>配置:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;dubbo:service interface=&quot;com.foo.BarService&quot; stub=&quot;com.foo.BarServiceStub&quot; /&gt;</span><br></pre></td></tr></table></figure></p>
+<p>存根编写的注意事项:</p>
 <ul>
-<li>ConsistentHash LoadBalance 一致性Hash<ul>
-<li>根据Hash值决定调用机器</li>
-</ul>
-</li>
-</ul>
-<p><img src="http://pl5cg4rhb.bkt.clouddn.com/ConsistentHashLoanBalance.png" alt="图片"></p>
-<ul>
-<li><p>权重的配置</p>
-<ul>
-<li><p>消费者配置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-- 接口级别</span><br><span class="line">&lt;dubbo:reference interface=&quot;...&quot; loadbalance=&quot;roundrobin&quot; /&gt;</span><br><span class="line">-- 方法级别</span><br><span class="line">&lt;dubbo:reference interface=&quot;...&quot;&gt;</span><br><span class="line">    &lt;dubbo:method name=&quot;...&quot; loadbalance=&quot;roundrobin&quot;/&gt;</span><br><span class="line">&lt;/dubbo:reference&gt;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>提供者配置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-- 接口级别</span><br><span class="line">&lt;dubbo:service interface=&quot;...&quot; loadbalance=&quot;roundrobin&quot; /&gt;</span><br><span class="line">-- 方法级别</span><br><span class="line">&lt;dubbo:service interface=&quot;...&quot;&gt;</span><br><span class="line">    &lt;dubbo:method name=&quot;...&quot; loadbalance=&quot;roundrobin&quot;/&gt;</span><br><span class="line">&lt;/dubbo:service&gt;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2 id="服务降级"><a href="#服务降级" class="headerlink" title="服务降级"></a>服务降级</h2><ul>
-<li>服务降级概念<ul>
-<li>当服务器访问量巨大时,无法正常的完成所有服务的响应,可以通过简单处理或关闭服务器中某些不重要的服务,来满足核心业务的高可用;</li>
-</ul>
-</li>
-<li>服务降级类型<ul>
-<li>mock=force:Return+null<ul>
-<li>直接在消费者端,强制对某个服务返回null;</li>
-</ul>
-</li>
-<li>mock=fail:Return+null<ul>
-<li>需要调用提供者,当提供者返回失败时(超时等情况)返回null;</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>服务降级操作<ul>
-<li>在dubbo的监控系统中可以设置<ul>
-<li>屏蔽:mock=force</li>
-<li>容错:mock=fail</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2 id="服务容错"><a href="#服务容错" class="headerlink" title="服务容错"></a>服务容错</h2><ul>
-<li>概念<ul>
-<li>服务调用错误后的处理手段；</li>
-</ul>
-</li>
-<li>服务容错类型<ul>
-<li>Failover Cluster<ul>
-<li>失败自动切换重试其他服务器；</li>
-</ul>
-</li>
-<li>Failfast Cluster<ul>
-<li>快速失败，只发起一次，适合于非幂等性操作；</li>
-</ul>
-</li>
-<li>Failsafe Cluster<ul>
-<li>失败吞掉异常，忽略，但在审计日志中展现；</li>
-</ul>
-</li>
-<li>Failback Cluster<ul>
-<li>失败自动重试；</li>
-</ul>
-</li>
-<li>Forking Cluster<ul>
-<li>并行调用，一次成功则成功；</li>
-</ul>
-</li>
-<li>Broadcast Cluster<ul>
-<li>串行调用，全成功则成功；</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Hystrix整合<ul>
-<li>待续</li>
-</ul>
+<li>Stub 必须有可传入 Proxy 的构造函数</li>
+<li>在 interface 旁边放一个 Stub 实现，它实现 BarService 接口，并有一个传入远程 BarService 实例的构造函数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">package com.foo;</span><br><span class="line">public class BarServiceStub implements BarService &#123; </span><br><span class="line">    private final BarService barService;</span><br><span class="line">    </span><br><span class="line">    // 构造函数传入真正的远程代理对象</span><br><span class="line">    public (BarService barService) &#123;</span><br><span class="line">        this.barService = barService;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public String sayHello(String name) &#123;</span><br><span class="line">        // 此代码在客户端执行, 你可以在客户端做ThreadLocal本地缓存，或预先验证参数是否合法，等等</span><br><span class="line">        try &#123;</span><br><span class="line">            return barService.sayHello(name);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            // 你可以容错，可以做任何AOP拦截事项</span><br><span class="line">            return &quot;容错数据&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 
@@ -561,14 +466,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/05/04/4.Dubbo的配置方式/" rel="next" title="Dubbo系列-5-Dubbo配置方式介绍">
+                <i class="fa fa-chevron-left"></i> Dubbo系列-5-Dubbo配置方式介绍
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/05/04/Dubbo的配置方式/" rel="prev" title="Dubbo系列-5-Dubbo配置方式介绍">
-                Dubbo系列-5-Dubbo配置方式介绍 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/05/14/6.Dubbo高可用/" rel="prev" title="Dubbo系列-7-Dubbo高可用">
+                Dubbo系列-7-Dubbo高可用 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -648,7 +557,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -704,7 +613,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#zookeeper宕机和dubbo直连"><span class="nav-number">1.</span> <span class="nav-text">zookeeper宕机和dubbo直连</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dubbo的负载均衡"><span class="nav-number">2.</span> <span class="nav-text">Dubbo的负载均衡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务降级"><span class="nav-number">3.</span> <span class="nav-text">服务降级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务容错"><span class="nav-number">4.</span> <span class="nav-text">服务容错</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置文件的优先级"><span class="nav-number">1.</span> <span class="nav-text">配置文件的优先级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动时检查"><span class="nav-number">2.</span> <span class="nav-text">启动时检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#超时设置-timeout属性"><span class="nav-number">3.</span> <span class="nav-text">超时设置 timeout属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重试次数retries"><span class="nav-number">4.</span> <span class="nav-text">重试次数retries</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#版本控制"><span class="nav-number">5.</span> <span class="nav-text">版本控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stub本地存根"><span class="nav-number">6.</span> <span class="nav-text">stub本地存根</span></a></li></ol></div>
             
 
           </div>
