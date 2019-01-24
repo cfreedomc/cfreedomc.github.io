@@ -106,7 +106,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="mysql,">
 
 
 
@@ -117,13 +117,21 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Cfreedomc&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="本篇主要介绍MySQL中事务隔离以及关于隔离级别原理和优化的认识;">
+<meta name="keywords" content="mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL系列-4-事务隔离">
+<meta property="og:url" content="http://yoursite.com/2018/10/26/MySQL系列-4-事务隔离/index.html">
 <meta property="og:site_name" content="Cfreedomc&#39;s Blog">
+<meta property="og:description" content="本篇主要介绍MySQL中事务隔离以及关于隔离级别原理和优化的认识;">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/mysql-4-2.png">
+<meta property="og:updated_time" content="2019-01-24T03:33:51.712Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Cfreedomc&#39;s Blog">
+<meta name="twitter:title" content="MySQL系列-4-事务隔离">
+<meta name="twitter:description" content="本篇主要介绍MySQL中事务隔离以及关于隔离级别原理和优化的认识;">
+<meta name="twitter:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
 
 
 
@@ -153,13 +161,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/">
+  <link rel="canonical" href="http://yoursite.com/2018/10/26/MySQL系列-4-事务隔离/">
 
 
 
 
 
-  <title>Cfreedomc's Blog</title>
+  <title>MySQL系列-4-事务隔离 | Cfreedomc's Blog</title>
   
 
 
@@ -178,8 +186,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -314,9 +321,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -346,9 +353,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/26/MySQL系列-4-事务隔离/" itemprop="url">MySQL系列-4-事务隔离</a></h1>
+          <h1 class="post-title" itemprop="name headline">MySQL系列-4-事务隔离</h1>
         
 
         <div class="post-meta">
@@ -398,19 +403,155 @@
       
 
       
-        
-          <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png" alt="图片"></p>
+        <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png" alt="图片"></p>
 <blockquote>
 <p>本篇主要介绍MySQL中事务隔离以及关于隔离级别原理和优化的认识;</p>
 </blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/10/26/MySQL系列-4-事务隔离/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+<a id="more"></a>
+<h2 id="事务隔离Isolation介绍"><a href="#事务隔离Isolation介绍" class="headerlink" title="事务隔离Isolation介绍"></a>事务隔离Isolation介绍</h2><h3 id="事务隔离的意义"><a href="#事务隔离的意义" class="headerlink" title="事务隔离的意义"></a>事务隔离的意义</h3><p>即在多个事务之间,其操作造成数据可见性的问题,主要会出现以下几种情况:</p>
+<ul>
+<li>脏读(dirty read)</li>
+<li>不可重复读(non-repeatable read)</li>
+<li>幻读(phantom read)</li>
+</ul>
+<p>事务隔离的意义是为了处理以上情况并且用适当的隔离级别处理相对应的业务问题;</p>
+<h3 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h3><p>根据事务间的关系SQL标准总结了事务的隔离级别,包括以下内容:</p>
+<ul>
+<li>读未提交(read uncommitted)<ul>
+<li>一个事务<strong>还没提交</strong>时,其变更能被其他事务看到;</li>
+<li>直接返回要读的值;</li>
+</ul>
+</li>
+<li>读提交(read committed)<ul>
+<li>一个事务<strong>提交</strong>后,其变更能被其他事务看到;</li>
+<li>每一条SQL开始执行时,创建<strong>视图</strong>;</li>
+</ul>
+</li>
+<li>可重复读(repeatable read)<ul>
+<li>一个事务执行中看到的数据,总跟这个时候<strong>启动时</strong>看到的数据<strong>一致</strong>;</li>
+<li>事务启动时,创建<strong>视图</strong>;</li>
+</ul>
+</li>
+<li>串行化(serializable)<ul>
+<li>对于同一行记录,”写”和”读”都进行<strong>加锁</strong>,当读写锁冲突时,后访问的事务必须等前一个事务执行完成,才能继续执行;</li>
+<li>串行执行;</li>
+</ul>
+</li>
+</ul>
+<h3 id="事务隔离级别举例"><a href="#事务隔离级别举例" class="headerlink" title="事务隔离级别举例"></a>事务隔离级别举例</h3><h3 id="简单举例"><a href="#简单举例" class="headerlink" title="简单举例"></a>简单举例</h3><table>
+<thead>
+<tr>
+<th style="text-align:left">事务A</th>
+<th style="text-align:left">事务B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">启动事务查询结果为1</td>
+<td style="text-align:left">启动事务</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">查询结果为1</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">将1改成2</td>
+</tr>
+<tr>
+<td style="text-align:left">查询得到值v1</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">提交事务B</td>
+</tr>
+<tr>
+<td style="text-align:left">查询得到值v2</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">提交事务A</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">查询得到值v3</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>读未提交: v1-2 ,v2-2, v3-2<ul>
+<li>可以读到事务B没有提交的操作,所以v1读到值直接是2;</li>
+</ul>
+</li>
+<li>读已提交:v1-1,v2-2,v3-2<ul>
+<li>只能读到提交事务数据,所以v1是1;</li>
+</ul>
+</li>
+<li>可重复读:v1-1,v2-1,v3-2<ul>
+<li>可重复读的特点就是要保证事务内数据与启动这一致,所以v1和v2都是1</li>
+</ul>
+</li>
+<li>串行化:v1-1,v2-1,v3-2<ul>
+<li>事务B执行”1–&gt;2”时由于事务A已经读过该行,会被锁住,直到事务A提交后,事务B才能继续执行;</li>
+</ul>
+</li>
+</ul>
+<p>ps:当Oracle迁移到MySQL,为了保证数据库隔离级别一致,需要将MySQL设置成”读提交”,查询和配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables like &apos;transaction_isolation&apos;;</span><br><span class="line"></span><br><span class="line">+-----------------------+----------------+</span><br><span class="line"></span><br><span class="line">| Variable_name | Value |</span><br><span class="line"></span><br><span class="line">+-----------------------+----------------+</span><br><span class="line"></span><br><span class="line">| transaction_isolation | READ-COMMITTED |</span><br><span class="line"></span><br><span class="line">+-----------------------+----------------+</span><br></pre></td></tr></table></figure></p>
+<h3 id="业务场景"><a href="#业务场景" class="headerlink" title="业务场景"></a>业务场景</h3><p>在这里举出一个需要”可重复读”的场景</p>
+<ul>
+<li>表<ul>
+<li>账务余额表</li>
+<li>账务余额变动流水表</li>
+</ul>
+</li>
+<li>需求<ul>
+<li>验证本月期初到当前余额差值是否等于金额流水变化合计;</li>
+</ul>
+</li>
+<li>思考<ul>
+<li>此时我们会发现,在校验过程中交易还是会不断产生的,如果使用隔离级别是”可重复读”,你就不需要担心其他事务对你这次操作的影响了;</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="事务隔离的实现"><a href="#事务隔离的实现" class="headerlink" title="事务隔离的实现"></a>事务隔离的实现</h2><h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p>这里还是以”可重复读”举例说明原理,在MySQL中,每条记录在更新的时候都会同时记录一条回滚操作,我们可以看下面的例子</p>
+<ul>
+<li>操作<ul>
+<li>开启不同事务将值进行如下更新:1–&gt;2–&gt;3–&gt;4</li>
+</ul>
+</li>
+<li>数据库操作<ul>
+<li>更新数据的同时生成以下内容<ul>
+<li>回滚段</li>
+<li>对应事务的视图 A,B,C</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>分析<ul>
+<li>正是因为在开启事务的同时也创建了对应这个事务时刻的视图,所以对于每个事务来说,只是去处理视图里的内容,这也是数据库的多版本并发控制(MVCC);</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://pl5cg4rhb.bkt.clouddn.com/mysql-4-2.png" alt="图片"></p>
+<h3 id="潜在风险"><a href="#潜在风险" class="headerlink" title="潜在风险"></a>潜在风险</h3><ul>
+<li>问题<ul>
+<li>在上面的原理中我们不难发现,在每个事务开启的时候都会生成回滚段以及视图,如果事务小还好,那么如果出现长事务,这些对应事务存在的回滚段和视图是否会成为占用内存的大户呢?</li>
+</ul>
+</li>
+<li>解答<ul>
+<li>答案是肯定会占用的,分析其原因就是首先要了解,这些回滚日志以及视图何时被删除,答案是在不需要的时候才删除,系统会判断当没有事务再需要用到这些数据时,才会被删除,那么就是如果存在一个长事务,那么其对应的数据就会一直保留到这个事务的结束,大量占用内存.</li>
+</ul>
+</li>
+</ul>
+<h2 id="事务的启动方式"><a href="#事务的启动方式" class="headerlink" title="事务的启动方式"></a>事务的启动方式</h2><h3 id="避免无意长事务问题"><a href="#避免无意长事务问题" class="headerlink" title="避免无意长事务问题"></a>避免无意长事务问题</h3><p>正是因为在长事务存在潜在风险,所以我们要做的就是如何避免使用长事务</p>
+<ul>
+<li>显示启动事务语句,start transaction,commit和rollback;</li>
+<li>将set autocommit=1,开启线程的自动提交;</li>
+</ul>
+<h3 id="优化特定场景的长事务"><a href="#优化特定场景的长事务" class="headerlink" title="优化特定场景的长事务"></a>优化特定场景的长事务</h3><p>作为开发来说,对于一个需要频繁使用事务的业务,不希望多次开启和提交事务,所以为了解决再次执行begin事务的开销,可以通过commit work and chain的方式提交事务并自动开启下一次事务来省去再次执行begin的开销;<br>ps:可以查询长事务<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from information_schema.innodb_trx where TIME_TO_SEC(timediff(now(),trx_started))&gt;60</span><br></pre></td></tr></table></figure></p>
+
       
     </div>
     
@@ -425,268 +566,36 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/16/2.MySQL系列-2-更新语句执行/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="cfreedomc">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cfreedomc's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/16/2.MySQL系列-2-更新语句执行/" itemprop="url">MySQL系列-2-更新语句执行介绍</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T00:00:00+08:00">
-                2018-10-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
           
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png" alt="图片"></p>
-<blockquote>
-<p>本篇主要介绍MySQL中更新语句的执行流程,并且引出了最为重要的两个日志模块redolog和binlog,简单的介绍了其作用以及在更新语句中扮演的角色;</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/10/16/2.MySQL系列-2-更新语句执行/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/16/2.MySQL系列-2-更新语句执行/" rel="next" title="MySQL系列-2-更新语句执行介绍">
+                <i class="fa fa-chevron-left"></i> MySQL系列-2-更新语句执行介绍
+              </a>
+            
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
 
-    
+          <span class="post-nav-divider"></span>
 
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/11/1.MySQL系列-1-查询语句执行/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="cfreedomc">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cfreedomc's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/11/1.MySQL系列-1-查询语句执行/" itemprop="url">MySQL系列-1-查询语句执行介绍</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+          <div class="post-nav-prev post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-11T00:00:00+08:00">
-                2018-10-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png" alt="图片"></p>
-<blockquote>
-<p>本篇主要介绍MySQL中查询语句的执行流程,主要包含连接器,查询缓存,分析器,优化器,执行器;</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/10/11/1.MySQL系列-1-查询语句执行/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -696,899 +605,11 @@
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/14/6.Dubbo高可用/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="cfreedomc">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cfreedomc's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/14/6.Dubbo高可用/" itemprop="url">Dubbo系列-7-Dubbo高可用</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-14T00:00:00+08:00">
-                2018-05-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png" alt="图片"></p>
-<blockquote>
-<p>本篇主要介绍Dubbo的高可用功能,主要包含注册中心异常,Dubbo负载均衡以及在高并发以及网络错误下Dubbo提供的解决方案;</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/14/6.Dubbo高可用/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/10/5.Dubbo的细节配置/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="cfreedomc">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cfreedomc's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/10/5.Dubbo的细节配置/" itemprop="url">Dubbo系列-6-Dubbo配置细节介绍</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-10T00:00:00+08:00">
-                2018-05-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6.jpg" alt="图片"></p>
-<blockquote>
-<p>本文主要介绍了Dubbo主要的细节属性配置以及相关配置的优先级等情况;</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/10/5.Dubbo的细节配置/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/04/4.Dubbo的配置方式/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="cfreedomc">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cfreedomc's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/04/4.Dubbo的配置方式/" itemprop="url">Dubbo系列-5-Dubbo配置方式介绍</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-04T00:00:00+08:00">
-                2018-05-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo5page.png" alt="图片"></p>
-<blockquote>
-<p>本文主要介绍了Dubbo主要支持的配置类型,并作出简单的事例以及分析;</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/04/4.Dubbo的配置方式/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/19/7.Springboot整合Dubbo/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="cfreedomc">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cfreedomc's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/19/7.Springboot整合Dubbo/" itemprop="url">Dubbo系列-4-SpringBoot整合Dubbo</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-19T00:00:00+08:00">
-                2018-04-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png" alt="图片"></p>
-<blockquote>
-<p>本篇主要介绍基于SpringBoot的dubbo配置方法</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/19/7.Springboot整合Dubbo/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/16/3.Dubbo快速使用/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="cfreedomc">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cfreedomc's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/16/3.Dubbo快速使用/" itemprop="url">Dubbo系列-3-Dubbo快速使用</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-16T00:00:00+08:00">
-                2018-04-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png" alt="图片"></p>
-<blockquote>
-<p>本篇主要介绍dubbo环境搭建以及配置</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/16/3.Dubbo快速使用/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/10/2.Dubbo介绍/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="cfreedomc">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cfreedomc's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/10/2.Dubbo介绍/" itemprop="url">Dubbo系列-2-Dubbo介绍</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-10T00:00:00+08:00">
-                2018-04-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png" alt="图片"></p>
-<blockquote>
-<p>本篇主要介绍dubbo是什么以及其主要的特性和组成;</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/10/2.Dubbo介绍/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/02/1.分布式系统基础/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="cfreedomc">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cfreedomc's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/02/1.分布式系统基础/" itemprop="url">Dubbo系列-1-分布式系统介绍</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-02T00:00:00+08:00">
-                2018-04-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png" alt="图片"></p>
-<blockquote>
-<p>本篇主要介绍分布式系统的演化过程;</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/02/1.分布式系统基础/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
@@ -1596,6 +617,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -1616,8 +641,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -1680,6 +714,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#事务隔离Isolation介绍"><span class="nav-number">1.</span> <span class="nav-text">事务隔离Isolation介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#事务隔离的意义"><span class="nav-number">1.1.</span> <span class="nav-text">事务隔离的意义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事务隔离级别"><span class="nav-number">1.2.</span> <span class="nav-text">事务隔离级别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事务隔离级别举例"><span class="nav-number">1.3.</span> <span class="nav-text">事务隔离级别举例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简单举例"><span class="nav-number">1.4.</span> <span class="nav-text">简单举例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#业务场景"><span class="nav-number">1.5.</span> <span class="nav-text">业务场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事务隔离的实现"><span class="nav-number">2.</span> <span class="nav-text">事务隔离的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实现原理"><span class="nav-number">2.1.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#潜在风险"><span class="nav-number">2.2.</span> <span class="nav-text">潜在风险</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事务的启动方式"><span class="nav-number">3.</span> <span class="nav-text">事务的启动方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#避免无意长事务问题"><span class="nav-number">3.1.</span> <span class="nav-text">避免无意长事务问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优化特定场景的长事务"><span class="nav-number">3.2.</span> <span class="nav-text">优化特定场景的长事务</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1820,6 +870,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
