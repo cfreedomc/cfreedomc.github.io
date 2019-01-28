@@ -106,7 +106,7 @@
 
 
 
-  <meta name="keywords" content="dubbo,">
+  <meta name="keywords" content="mysql,">
 
 
 
@@ -117,23 +117,24 @@
 
 
 
-<meta name="description" content="本文主要介绍了Dubbo主要的细节属性配置以及相关配置的优先级等情况;">
-<meta name="keywords" content="dubbo">
+<meta name="description" content="本篇主要介绍MySQL中关于索引使用的原理介绍,主要包含覆盖索引,最左前缀原理,索引下推;">
+<meta name="keywords" content="mysql">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Dubbo系列-6-Dubbo配置细节介绍">
-<meta property="og:url" content="http://yoursite.com/2018/05/10/5.Dubbo的细节配置/index.html">
+<meta property="og:title" content="MySQL系列-6-索引使用原理1">
+<meta property="og:url" content="http://yoursite.com/2018/11/04/6.MySQL系列-6-索引使用原理/index.html">
 <meta property="og:site_name" content="Cfreedomc&#39;s Blog">
-<meta property="og:description" content="本文主要介绍了Dubbo主要的细节属性配置以及相关配置的优先级等情况;">
+<meta property="og:description" content="本篇主要介绍MySQL中关于索引使用的原理介绍,主要包含覆盖索引,最左前缀原理,索引下推;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6.jpg">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6-1.png">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6-2.png">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6-3.png">
-<meta property="og:updated_time" content="2019-01-28T12:19:31.022Z">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/mysql6-1.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/mysql6-2.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/mysql6-3.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/mysql6-4.png">
+<meta property="og:updated_time" content="2019-01-28T12:31:05.688Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Dubbo系列-6-Dubbo配置细节介绍">
-<meta name="twitter:description" content="本文主要介绍了Dubbo主要的细节属性配置以及相关配置的优先级等情况;">
-<meta name="twitter:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6.jpg">
+<meta name="twitter:title" content="MySQL系列-6-索引使用原理1">
+<meta name="twitter:description" content="本篇主要介绍MySQL中关于索引使用的原理介绍,主要包含覆盖索引,最左前缀原理,索引下推;">
+<meta name="twitter:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
 
 
 
@@ -163,13 +164,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/05/10/5.Dubbo的细节配置/">
+  <link rel="canonical" href="http://yoursite.com/2018/11/04/6.MySQL系列-6-索引使用原理/">
 
 
 
 
 
-  <title>Dubbo系列-6-Dubbo配置细节介绍 | Cfreedomc's Blog</title>
+  <title>MySQL系列-6-索引使用原理1 | Cfreedomc's Blog</title>
   
 
 
@@ -338,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/10/5.Dubbo的细节配置/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/04/6.MySQL系列-6-索引使用原理/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="cfreedomc">
@@ -355,7 +356,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Dubbo系列-6-Dubbo配置细节介绍</h1>
+          <h1 class="post-title" itemprop="name headline">MySQL系列-6-索引使用原理1</h1>
         
 
         <div class="post-meta">
@@ -367,8 +368,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-10T00:00:00+08:00">
-                2018-05-10
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-04T00:00:00+08:00">
+                2018-11-04
               </time>
             
 
@@ -405,37 +406,63 @@
       
 
       
-        <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6.jpg" alt="图片"></p>
+        <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png" alt="图片"></p>
 <blockquote>
-<p>本文主要介绍了Dubbo主要的细节属性配置以及相关配置的优先级等情况;</p>
+<p>本篇主要介绍MySQL中关于索引使用的原理介绍,主要包含覆盖索引,最左前缀原理,索引下推;</p>
 </blockquote>
 <a id="more"></a>
-<h3 id="配置文件的优先级"><a href="#配置文件的优先级" class="headerlink" title="配置文件的优先级"></a>配置文件的优先级</h3><p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6-1.png" alt="图片"><br>在dubbo属性配置中</p>
+<h2 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引"></a>覆盖索引</h2><h3 id="覆盖索引概念"><a href="#覆盖索引概念" class="headerlink" title="覆盖索引概念"></a>覆盖索引概念</h3><p>从之前InnoDB的索引结构可以发现,如果是通过非主键索引进行搜索时,需要进行回表的操作,而如果我们查询结果只需要ID主键,这时就不需要回表,因为在非主键索引树中已经”覆盖”了查询的需求;</p>
+<h3 id="覆盖索引好处"><a href="#覆盖索引好处" class="headerlink" title="覆盖索引好处"></a>覆盖索引好处</h3><p>由于覆盖索引的方式减少了一次搜索,显著的提高了性能,是一种常用的性能优化手段</p>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><ul>
+<li><p>简单模型</p>
 <ul>
-<li>-D的直接加载是优先级最高的</li>
-<li>随后是xml格式的dubbo(在这里xml格式的dubbo.xml是等价于spring boot里的application.properties的)</li>
-<li>最后是dubbo.properties文件<h3 id="启动时检查"><a href="#启动时检查" class="headerlink" title="启动时检查"></a>启动时检查</h3>该功能主要是用于当没有提供者出现,消费者端也可以模拟启动<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#消费端不检查某个服务</span><br><span class="line">dubbo.reference.com.foo.BarService.check=false</span><br><span class="line">#消费端引用统一不检查</span><br><span class="line">dubbo.reference.check=false</span><br><span class="line"></span><br><span class="line">dubbo.consumer.check=false</span><br><span class="line">#注册中心不检查,</span><br><span class="line">#官方:关闭注册中心启动时检查 (注册订阅失败时报错)</span><br><span class="line">#实际操作,一般都会检查不断重连</span><br><span class="line">dubbo.registry.check=false</span><br></pre></td></tr></table></figure>
+<li>表中主键是ID,非主键索引是k<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-- 覆盖索引</span><br><span class="line">select ID from table where k=?;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h3 id="超时设置-timeout属性"><a href="#超时设置-timeout属性" class="headerlink" title="超时设置 timeout属性"></a>超时设置 timeout属性</h3><p>超过超时时间会认为连接失败,主要的是要了解配置超时属性的优先级(如timeout,retries, loadbalance, actives等属性)</p>
+</li>
+<li><p>业务举例</p>
 <ul>
-<li>细粒度高的设置优先</li>
-<li>细粒度相同,消费端优先(消费端都不介意,提供者就不要多BB了)</li>
-</ul>
-<p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6-2.png" alt="图片"></p>
-<h3 id="重试次数retries"><a href="#重试次数retries" class="headerlink" title="重试次数retries"></a>重试次数retries</h3><p>重试次数注意点:</p>
-<ul>
-<li>如果设置3,其真实重试次数就是3+1,最开始的一次不计入总次数中</li>
-<li>支持重试的服务要求其操作是幂等的操作,这点很重要,如是insert操作等是不推荐重试</li>
-<li>如果有提供者集群,dubbo默认配置会调用2次失败后切换<h3 id="版本控制"><a href="#版本控制" class="headerlink" title="版本控制"></a>版本控制</h3>可以通过在service和reference中配置version,可以约定提供者和消费者的调用版本</li>
-</ul>
-<h3 id="stub本地存根"><a href="#stub本地存根" class="headerlink" title="stub本地存根"></a>stub本地存根</h3><p><a href="http://dubbo.apache.org/zh-cn/docs/user/demos/local-stub.html" target="_blank" rel="noopener">链接</a><br><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6-3.png" alt="图片"><br>存根的目的:希望消费者在调用服务时做出自己的一点贡献,比如常用的参数校验等情况,保证参数正常后再真正的调用远程的服务<br>配置:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;dubbo:service interface=&quot;com.foo.BarService&quot; stub=&quot;com.foo.BarServiceStub&quot; /&gt;</span><br></pre></td></tr></table></figure></p>
-<p>存根编写的注意事项:</p>
-<ul>
-<li>Stub 必须有可传入 Proxy 的构造函数</li>
-<li>在 interface 旁边放一个 Stub 实现，它实现 BarService 接口，并有一个传入远程 BarService 实例的构造函数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">package com.foo;</span><br><span class="line">public class BarServiceStub implements BarService &#123; </span><br><span class="line">    private final BarService barService;</span><br><span class="line">    </span><br><span class="line">    // 构造函数传入真正的远程代理对象</span><br><span class="line">    public (BarService barService) &#123;</span><br><span class="line">        this.barService = barService;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public String sayHello(String name) &#123;</span><br><span class="line">        // 此代码在客户端执行, 你可以在客户端做ThreadLocal本地缓存，或预先验证参数是否合法，等等</span><br><span class="line">        try &#123;</span><br><span class="line">            return barService.sayHello(name);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            // 你可以容错，可以做任何AOP拦截事项</span><br><span class="line">            return &quot;容错数据&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<li>如果有一张客户表,其中有主键id,身份证id_card,用户名name,年级age;<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `tuser` (</span><br><span class="line">  `id` int(11) NOT NULL,</span><br><span class="line">  `id_card` varchar(32) DEFAULT NULL,</span><br><span class="line">  `name` varchar(32) DEFAULT NULL,</span><br><span class="line">  `age` int(11) DEFAULT NULL,</span><br><span class="line">  `ismale` tinyint(1) DEFAULT NULL,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  KEY `id_card` (`id_card`),</span><br><span class="line">  KEY `name_age` (`name`,`age`)</span><br><span class="line">) ENGINE=InnoDB</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
+</li>
+<li><p>此时表中已经有了id_card的索引,但是如果有一个高频需求是通过id_card搜索name的话,这样如果建立一个id_card和name的联合索引,就不需要回表,直接通过索引树就可以返回name了</p>
+</li>
+</ul>
+<hr>
+<h2 id="最左前缀原则"><a href="#最左前缀原则" class="headerlink" title="最左前缀原则"></a>最左前缀原则</h2><p>承接上面覆盖索引的优化方式而言,我们立马也是有个疑问,就是为了覆盖索引,联合索引是有必要的,那么这样下去岂不是要建立很多索引,这里就要引出最左前缀原则;</p>
+<h3 id="最左前缀原则概念"><a href="#最左前缀原则概念" class="headerlink" title="最左前缀原则概念"></a>最左前缀原则概念</h3><p>即对于联合索引而言,只要满足最左前缀就可以利用索引来加速搜索,这个最左前缀可以是联合索引的最左N个字段,也可以使最左字符串字段的M个字符</p>
+<ul>
+<li>为何可以有这个原则,是因为B+树的结构,会按照顺序排列索引,所以可以从最左定位索引位置</li>
+</ul>
+<h3 id="最左前缀原则举例"><a href="#最左前缀原则举例" class="headerlink" title="最左前缀原则举例"></a>最左前缀原则举例</h3><p>我们继续用上面的tuser表,建立(name,age)的联合索引,只要条件满足”张三%”或”张%”都能利用到联合索引<br><img src="http://pl5cg4rhb.bkt.clouddn.com/mysql6-1.png" alt="图片"></p>
+<h3 id="基于最左前缀原则优化"><a href="#基于最左前缀原则优化" class="headerlink" title="基于最左前缀原则优化"></a>基于最左前缀原则优化</h3><ul>
+<li><strong>将高频查询字段放在联合索引的最左边</strong><ul>
+<li>这样做的好处是如果有该联合索引,当出现联合索引(a,b)时,在搜索a字段无需单独建立一个索引a,可以通过该联合索引快速查询;</li>
+</ul>
+</li>
+<li><strong>将空间占用大的放在联合索引最左边</strong><ul>
+<li>就好比name,age的联合索引,如果name和age的查询权重一致,也就是必须再建立其中一个的单独索引,此刻建立使用联合索引(name,age)和索引age的方式,因为相比name的age占用的空间比较小</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="索引下推"><a href="#索引下推" class="headerlink" title="索引下推"></a>索引下推</h2><h3 id="索引下推概念"><a href="#索引下推概念" class="headerlink" title="索引下推概念"></a>索引下推概念</h3><p>索引下推(index condition pushdown)是可以在索引遍历过程中,先对索引中包含的字段做判断,直接过滤掉不满足的条件,减少回表次数(MySQL5.6后引入)</p>
+<h3 id="索引下推举例"><a href="#索引下推举例" class="headerlink" title="索引下推举例"></a>索引下推举例</h3><p>还是以上表举例,我们有(name,age)的联合索引,现在有以下的查询语句<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from tuser where name like &apos;张 %&apos; and age=10 and ismale=1;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>首先是根据最左前缀原则可以查到索引”张”开头的,随后会出现如下情况<ul>
+<li>在5.6之前会直接回表查询</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://pl5cg4rhb.bkt.clouddn.com/mysql6-2.png" alt="图片"></p>
+<ul>
+<li>5.7之后会先判断age是否满足等于10</li>
+</ul>
+<p><img src="http://pl5cg4rhb.bkt.clouddn.com/mysql6-3.png" alt="图片"></p>
+<h3 id="索引实战"><a href="#索引实战" class="headerlink" title="索引实战"></a>索引实战</h3><p>思考题,有以下表结构<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `geek` (</span><br><span class="line">  `a` int(11) NOT NULL,</span><br><span class="line">  `b` int(11) NOT NULL,</span><br><span class="line">  `c` int(11) NOT NULL,</span><br><span class="line">  `d` int(11) NOT NULL,</span><br><span class="line">  PRIMARY KEY (`a`,`b`),</span><br><span class="line">  KEY `c` (`c`),</span><br><span class="line">  KEY `ca` (`c`,`a`),</span><br><span class="line">  KEY `cb` (`c`,`b`)</span><br><span class="line">) ENGINE=InnoDB;</span><br></pre></td></tr></table></figure></p>
+<p>由于历史原因,有联合主键,同时有了索引c,那么为何还要创建ca,cb呢,创建人表示因为有以下的需求:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select * from geek where c=N order by a limit 1;</span><br><span class="line">select * from geek where c=N order by b limit 1;</span><br></pre></td></tr></table></figure></p>
+<p>解答:<br><img src="http://pl5cg4rhb.bkt.clouddn.com/mysql6-4.png" alt="图片"></p>
 
       
     </div>
@@ -453,7 +480,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/dubbo/" rel="tag"># dubbo</a>
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
           
         </div>
       
@@ -466,8 +493,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/04/4.Dubbo的配置方式/" rel="next" title="Dubbo系列-5-Dubbo配置方式介绍">
-                <i class="fa fa-chevron-left"></i> Dubbo系列-5-Dubbo配置方式介绍
+              <a href="/2018/10/31/5.MySQL系列-5-索引基础/" rel="next" title="MySQL系列-5-索引基础">
+                <i class="fa fa-chevron-left"></i> MySQL系列-5-索引基础
               </a>
             
           </div>
@@ -475,10 +502,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/14/6.Dubbo高可用/" rel="prev" title="Dubbo系列-7-Dubbo高可用">
-                Dubbo系列-7-Dubbo高可用 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -613,7 +636,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置文件的优先级"><span class="nav-number">1.</span> <span class="nav-text">配置文件的优先级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动时检查"><span class="nav-number">2.</span> <span class="nav-text">启动时检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#超时设置-timeout属性"><span class="nav-number">3.</span> <span class="nav-text">超时设置 timeout属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重试次数retries"><span class="nav-number">4.</span> <span class="nav-text">重试次数retries</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#版本控制"><span class="nav-number">5.</span> <span class="nav-text">版本控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stub本地存根"><span class="nav-number">6.</span> <span class="nav-text">stub本地存根</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#覆盖索引"><span class="nav-number">1.</span> <span class="nav-text">覆盖索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#覆盖索引概念"><span class="nav-number">1.1.</span> <span class="nav-text">覆盖索引概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#覆盖索引好处"><span class="nav-number">1.2.</span> <span class="nav-text">覆盖索引好处</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#举例"><span class="nav-number">1.3.</span> <span class="nav-text">举例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最左前缀原则"><span class="nav-number">2.</span> <span class="nav-text">最左前缀原则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#最左前缀原则概念"><span class="nav-number">2.1.</span> <span class="nav-text">最左前缀原则概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最左前缀原则举例"><span class="nav-number">2.2.</span> <span class="nav-text">最左前缀原则举例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于最左前缀原则优化"><span class="nav-number">2.3.</span> <span class="nav-text">基于最左前缀原则优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引下推"><span class="nav-number">3.</span> <span class="nav-text">索引下推</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#索引下推概念"><span class="nav-number">3.1.</span> <span class="nav-text">索引下推概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引下推举例"><span class="nav-number">3.2.</span> <span class="nav-text">索引下推举例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引实战"><span class="nav-number">3.3.</span> <span class="nav-text">索引实战</span></a></li></ol></li></ol></div>
             
 
           </div>

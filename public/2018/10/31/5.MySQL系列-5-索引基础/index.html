@@ -106,7 +106,7 @@
 
 
 
-  <meta name="keywords" content="dubbo,">
+  <meta name="keywords" content="mysql,">
 
 
 
@@ -117,23 +117,24 @@
 
 
 
-<meta name="description" content="本文主要介绍了Dubbo主要的细节属性配置以及相关配置的优先级等情况;">
-<meta name="keywords" content="dubbo">
+<meta name="description" content="本篇主要介绍MySQL中关于索引的底层结构以及InnoDB的索引基础概念;">
+<meta name="keywords" content="mysql">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Dubbo系列-6-Dubbo配置细节介绍">
-<meta property="og:url" content="http://yoursite.com/2018/05/10/5.Dubbo的细节配置/index.html">
+<meta property="og:title" content="MySQL系列-5-索引基础">
+<meta property="og:url" content="http://yoursite.com/2018/10/31/5.MySQL系列-5-索引基础/index.html">
 <meta property="og:site_name" content="Cfreedomc&#39;s Blog">
-<meta property="og:description" content="本文主要介绍了Dubbo主要的细节属性配置以及相关配置的优先级等情况;">
+<meta property="og:description" content="本篇主要介绍MySQL中关于索引的底层结构以及InnoDB的索引基础概念;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6.jpg">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6-1.png">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6-2.png">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6-3.png">
-<meta property="og:updated_time" content="2019-01-28T12:19:31.022Z">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/mysql5-1.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/mysql5-2.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/mysql5-3.png">
+<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/mysql5-4.png">
+<meta property="og:updated_time" content="2019-01-28T12:28:01.566Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Dubbo系列-6-Dubbo配置细节介绍">
-<meta name="twitter:description" content="本文主要介绍了Dubbo主要的细节属性配置以及相关配置的优先级等情况;">
-<meta name="twitter:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6.jpg">
+<meta name="twitter:title" content="MySQL系列-5-索引基础">
+<meta name="twitter:description" content="本篇主要介绍MySQL中关于索引的底层结构以及InnoDB的索引基础概念;">
+<meta name="twitter:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
 
 
 
@@ -163,13 +164,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/05/10/5.Dubbo的细节配置/">
+  <link rel="canonical" href="http://yoursite.com/2018/10/31/5.MySQL系列-5-索引基础/">
 
 
 
 
 
-  <title>Dubbo系列-6-Dubbo配置细节介绍 | Cfreedomc's Blog</title>
+  <title>MySQL系列-5-索引基础 | Cfreedomc's Blog</title>
   
 
 
@@ -338,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/10/5.Dubbo的细节配置/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/31/5.MySQL系列-5-索引基础/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="cfreedomc">
@@ -355,7 +356,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Dubbo系列-6-Dubbo配置细节介绍</h1>
+          <h1 class="post-title" itemprop="name headline">MySQL系列-5-索引基础</h1>
         
 
         <div class="post-meta">
@@ -367,8 +368,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-10T00:00:00+08:00">
-                2018-05-10
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-31T00:00:00+08:00">
+                2018-10-31
               </time>
             
 
@@ -405,36 +406,120 @@
       
 
       
-        <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6.jpg" alt="图片"></p>
+        <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png" alt="图片"></p>
 <blockquote>
-<p>本文主要介绍了Dubbo主要的细节属性配置以及相关配置的优先级等情况;</p>
+<p>本篇主要介绍MySQL中关于索引的底层结构以及InnoDB的索引基础概念;</p>
 </blockquote>
 <a id="more"></a>
-<h3 id="配置文件的优先级"><a href="#配置文件的优先级" class="headerlink" title="配置文件的优先级"></a>配置文件的优先级</h3><p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6-1.png" alt="图片"><br>在dubbo属性配置中</p>
+<h2 id="索引的概念"><a href="#索引的概念" class="headerlink" title="索引的概念"></a>索引的概念</h2><h3 id="索引的目的"><a href="#索引的目的" class="headerlink" title="索引的目的"></a>索引的目的</h3><p>为了提高数据查询的效率,像书的目录</p>
+<h3 id="索引的结构"><a href="#索引的结构" class="headerlink" title="索引的结构"></a>索引的结构</h3><p>索引的储存结构常见的有以下三种:<strong>哈希表</strong>,<strong>有序数组</strong>和<strong>搜索树</strong></p>
 <ul>
-<li>-D的直接加载是优先级最高的</li>
-<li>随后是xml格式的dubbo(在这里xml格式的dubbo.xml是等价于spring boot里的application.properties的)</li>
-<li>最后是dubbo.properties文件<h3 id="启动时检查"><a href="#启动时检查" class="headerlink" title="启动时检查"></a>启动时检查</h3>该功能主要是用于当没有提供者出现,消费者端也可以模拟启动<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#消费端不检查某个服务</span><br><span class="line">dubbo.reference.com.foo.BarService.check=false</span><br><span class="line">#消费端引用统一不检查</span><br><span class="line">dubbo.reference.check=false</span><br><span class="line"></span><br><span class="line">dubbo.consumer.check=false</span><br><span class="line">#注册中心不检查,</span><br><span class="line">#官方:关闭注册中心启动时检查 (注册订阅失败时报错)</span><br><span class="line">#实际操作,一般都会检查不断重连</span><br><span class="line">dubbo.registry.check=false</span><br></pre></td></tr></table></figure>
+<li>哈希表<ul>
+<li>概念:<ul>
+<li>是以键-值(key-value)存储数据的结构,只要输入key,就返回对应key的value值,哈希的思路就是把值放在数组里,用哈希函数把key换成一个确定的位置;但哈希函数在多个key可能返回同一个位置,这个时候在这个位置上就会拉去出一个链表;</li>
+</ul>
+</li>
+<li>下图为以ID_card查找name的哈希结构的索引结构图</li>
+</ul>
 </li>
 </ul>
-<h3 id="超时设置-timeout属性"><a href="#超时设置-timeout属性" class="headerlink" title="超时设置 timeout属性"></a>超时设置 timeout属性</h3><p>超过超时时间会认为连接失败,主要的是要了解配置超时属性的优先级(如timeout,retries, loadbalance, actives等属性)</p>
+<p><img src="http://pl5cg4rhb.bkt.clouddn.com/mysql5-1.png" alt="图片"></p>
 <ul>
-<li>细粒度高的设置优先</li>
-<li>细粒度相同,消费端优先(消费端都不介意,提供者就不要多BB了)</li>
+<li>哈希结构优缺点<ul>
+<li>优点:支持快速的增删</li>
+<li>缺点:结构<strong>无序</strong>,<strong>区间查询速度很慢</strong>(必须全部扫描)</li>
 </ul>
-<p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6-2.png" alt="图片"></p>
-<h3 id="重试次数retries"><a href="#重试次数retries" class="headerlink" title="重试次数retries"></a>重试次数retries</h3><p>重试次数注意点:</p>
-<ul>
-<li>如果设置3,其真实重试次数就是3+1,最开始的一次不计入总次数中</li>
-<li>支持重试的服务要求其操作是幂等的操作,这点很重要,如是insert操作等是不推荐重试</li>
-<li>如果有提供者集群,dubbo默认配置会调用2次失败后切换<h3 id="版本控制"><a href="#版本控制" class="headerlink" title="版本控制"></a>版本控制</h3>可以通过在service和reference中配置version,可以约定提供者和消费者的调用版本</li>
-</ul>
-<h3 id="stub本地存根"><a href="#stub本地存根" class="headerlink" title="stub本地存根"></a>stub本地存根</h3><p><a href="http://dubbo.apache.org/zh-cn/docs/user/demos/local-stub.html" target="_blank" rel="noopener">链接</a><br><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo-6-3.png" alt="图片"><br>存根的目的:希望消费者在调用服务时做出自己的一点贡献,比如常用的参数校验等情况,保证参数正常后再真正的调用远程的服务<br>配置:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;dubbo:service interface=&quot;com.foo.BarService&quot; stub=&quot;com.foo.BarServiceStub&quot; /&gt;</span><br></pre></td></tr></table></figure></p>
-<p>存根编写的注意事项:</p>
-<ul>
-<li>Stub 必须有可传入 Proxy 的构造函数</li>
-<li>在 interface 旁边放一个 Stub 实现，它实现 BarService 接口，并有一个传入远程 BarService 实例的构造函数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">package com.foo;</span><br><span class="line">public class BarServiceStub implements BarService &#123; </span><br><span class="line">    private final BarService barService;</span><br><span class="line">    </span><br><span class="line">    // 构造函数传入真正的远程代理对象</span><br><span class="line">    public (BarService barService) &#123;</span><br><span class="line">        this.barService = barService;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public String sayHello(String name) &#123;</span><br><span class="line">        // 此代码在客户端执行, 你可以在客户端做ThreadLocal本地缓存，或预先验证参数是否合法，等等</span><br><span class="line">        try &#123;</span><br><span class="line">            return barService.sayHello(name);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            // 你可以容错，可以做任何AOP拦截事项</span><br><span class="line">            return &quot;容错数据&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
+<li>使用场景<ul>
+<li><strong>等值查询</strong>,即直接”= v”的场景</li>
+<li>有序数组</li>
+</ul>
+</li>
+<li>概念:<ul>
+<li>有序数组我们都很熟悉,就是将索引递增的存入数组中的结构</li>
+</ul>
+</li>
+<li>如下图所示</li>
+</ul>
+<p><img src="http://pl5cg4rhb.bkt.clouddn.com/mysql5-2.png" alt="图片"></p>
+<ul>
+<li>有序数组的优缺点:<ul>
+<li>优点:因为有序,所以可以快速的进行等值以及区间查询</li>
+<li>缺点:如果需要对数组进行改动,那么代价就很大,在数组中间插入记录则需挪动后面所有记录;</li>
+</ul>
+</li>
+<li>使用场景:<ul>
+<li>有序数组索引只适用于<strong>静态存储引擎</strong></li>
+<li>搜索树</li>
+</ul>
+</li>
+<li>概念:<ul>
+<li>二叉树的每个节点的左儿子小于父节点,父节点又小于右儿子</li>
+</ul>
+</li>
+<li>下图为二叉树的结构</li>
+</ul>
+<p><img src="http://pl5cg4rhb.bkt.clouddn.com/mysql5-3.png" alt="图片"></p>
+<ul>
+<li>搜索树的优缺点<ul>
+<li>优点:,查询和更改都快</li>
+<li>缺点:二叉搜索树的由于索引不只要写入内存,还要写入磁盘,每一层都要写入磁盘交互,而磁盘读取数据库寻址需要10ms左右,所以对于很大数据量的表,用二叉树存储太慢,所以退而其次的使用多叉树的结构;</li>
+</ul>
+</li>
+<li>使用场景<ul>
+<li>N叉树读写的性能优势以及适配磁盘的访问木事,基本广泛应用在数据库引擎;</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="InnoDB索引模型"><a href="#InnoDB索引模型" class="headerlink" title="InnoDB索引模型"></a>InnoDB索引模型</h2><p>由于在Mysql中我们主要使用InnoDB作为主要的搜索引擎,所以以下都以InnoDB介绍</p>
+<h3 id="B-树"><a href="#B-树" class="headerlink" title="B+树"></a>B+树</h3><p>B+树是二叉树的一种变形,其优势使得在一个内存页中可以存储更多的key,具体的B+树结构就不在这里展开了;</p>
+<h3 id="InnoDB索引特点"><a href="#InnoDB索引特点" class="headerlink" title="InnoDB索引特点"></a>InnoDB索引特点</h3><p>InnoDB中索引类型主要会区分:<strong>主键索引</strong>以及<strong>非主键索引</strong>两种;</p>
+<ul>
+<li>主键索引<ul>
+<li>主键索引的叶子节点存放的是整行数据,被称为聚簇索引(clustered index)</li>
+</ul>
+</li>
+<li>非主键索引<ul>
+<li>非主键索引叶子节点存放的是主键索引的值,所以也成为二级索引( secondary index)</li>
+</ul>
+</li>
+<li>举例:如现在有主键索引ID和非主键索引k,其结构如下图</li>
+</ul>
+<p><img src="http://pl5cg4rhb.bkt.clouddn.com/mysql5-4.png" alt="图片"></p>
+<ul>
+<li>索引的流程<ul>
+<li>由于如上图结构的存在,所以当我们使用k索引进行查询时,会先从k的索引树先查询到主键索引值,再通过主键索引查询到对应行数据(这个过程称之为<strong>回表</strong>)</li>
+<li>所以在应用中应该尽量使用主键查询;</li>
+</ul>
+</li>
+</ul>
+<h3 id="索引的维护"><a href="#索引的维护" class="headerlink" title="索引的维护"></a>索引的维护</h3><ul>
+<li>B+树问题<ul>
+<li>由于B+树为了维持索引的有序性,每次插入新值都需要维护,如果插入的ID&gt;current.Max直接在后面接索引就可以,但是如果出现插入的ID&lt;current.Max时,就需要将所以大于插入值得索引值后移,在后移过程中可能出现当前索引页满了需要扩张的情况,那么这样开销就更为大了;</li>
+</ul>
+</li>
+<li>主键索引建议<ul>
+<li>所以由于上面的问题,工作中会发现主键索引一般会用<strong>int且自增</strong>,这样的好处有两点<ul>
+<li>永远在最后插入新数据,不用担心B+树的格外开销</li>
+<li>使用int时非主键索引的叶子节点存放的主键索引就小,自然占用空间就小</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>格外说明:<ul>
+<li>所以什么时候会用业务字段作为索引,一般会满足以下两个条件<ul>
+<li>只有一个索引</li>
+<li>该索引是唯一索引</li>
+</ul>
+</li>
+<li>如果不满足以上条件,建议还是按照主键索引的玩法去做</li>
+</ul>
+</li>
+</ul>
+<h3 id="索引实战"><a href="#索引实战" class="headerlink" title="索引实战"></a>索引实战</h3><p>思考问题:直接删除非主键索引和删除主键索引有何问题?</p>
+<ul>
+<li>解答:删除非主键索引没问题,但是删除主键索引会使整个表的索引都没用,本质就是会将整个表进行重建;</li>
 </ul>
 
       
@@ -453,7 +538,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/dubbo/" rel="tag"># dubbo</a>
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
           
         </div>
       
@@ -466,8 +551,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/04/4.Dubbo的配置方式/" rel="next" title="Dubbo系列-5-Dubbo配置方式介绍">
-                <i class="fa fa-chevron-left"></i> Dubbo系列-5-Dubbo配置方式介绍
+              <a href="/2018/10/26/MySQL系列-4-事务隔离/" rel="next" title="MySQL系列-4-事务隔离">
+                <i class="fa fa-chevron-left"></i> MySQL系列-4-事务隔离
               </a>
             
           </div>
@@ -476,8 +561,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/05/14/6.Dubbo高可用/" rel="prev" title="Dubbo系列-7-Dubbo高可用">
-                Dubbo系列-7-Dubbo高可用 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/11/04/6.MySQL系列-6-索引使用原理/" rel="prev" title="MySQL系列-6-索引使用原理1">
+                MySQL系列-6-索引使用原理1 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -613,7 +698,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置文件的优先级"><span class="nav-number">1.</span> <span class="nav-text">配置文件的优先级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动时检查"><span class="nav-number">2.</span> <span class="nav-text">启动时检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#超时设置-timeout属性"><span class="nav-number">3.</span> <span class="nav-text">超时设置 timeout属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重试次数retries"><span class="nav-number">4.</span> <span class="nav-text">重试次数retries</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#版本控制"><span class="nav-number">5.</span> <span class="nav-text">版本控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stub本地存根"><span class="nav-number">6.</span> <span class="nav-text">stub本地存根</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#索引的概念"><span class="nav-number">1.</span> <span class="nav-text">索引的概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#索引的目的"><span class="nav-number">1.1.</span> <span class="nav-text">索引的目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引的结构"><span class="nav-number">1.2.</span> <span class="nav-text">索引的结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InnoDB索引模型"><span class="nav-number">2.</span> <span class="nav-text">InnoDB索引模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#B-树"><span class="nav-number">2.1.</span> <span class="nav-text">B+树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB索引特点"><span class="nav-number">2.2.</span> <span class="nav-text">InnoDB索引特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引的维护"><span class="nav-number">2.3.</span> <span class="nav-text">索引的维护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引实战"><span class="nav-number">2.4.</span> <span class="nav-text">索引实战</span></a></li></ol></li></ol></div>
             
 
           </div>
