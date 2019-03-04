@@ -125,14 +125,14 @@
 <meta property="og:site_name" content="Cfreedomc&#39;s Blog">
 <meta property="og:description" content="本篇主要介绍MySQL中更新语句的执行流程,并且引出了最为重要的两个日志模块redolog和binlog,简单的介绍了其作用以及在更新语句中扮演的角色;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/mysql-2-1.png">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/mysql-2-2.png">
-<meta property="og:updated_time" content="2019-01-28T12:19:31.019Z">
+<meta property="og:image" content="https://i.loli.net/2019/03/04/5c7d2be89808d.png">
+<meta property="og:image" content="https://i.loli.net/2019/03/04/5c7d2c57e4b9f.png">
+<meta property="og:image" content="https://i.loli.net/2019/03/04/5c7d2c581b558.png">
+<meta property="og:updated_time" content="2019-03-04T13:47:28.900Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL系列-2-更新语句执行介绍">
 <meta name="twitter:description" content="本篇主要介绍MySQL中更新语句的执行流程,并且引出了最为重要的两个日志模块redolog和binlog,简单的介绍了其作用以及在更新语句中扮演的角色;">
-<meta name="twitter:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
+<meta name="twitter:image" content="https://i.loli.net/2019/03/04/5c7d2be89808d.png">
 
 
 
@@ -404,7 +404,7 @@
       
 
       
-        <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png" alt="图片"></p>
+        <p><img src="https://i.loli.net/2019/03/04/5c7d2be89808d.png" alt="图片"></p>
 <blockquote>
 <p>本篇主要介绍MySQL中更新语句的执行流程,并且引出了最为重要的两个日志模块redolog和binlog,简单的介绍了其作用以及在更新语句中扮演的角色;</p>
 </blockquote>
@@ -437,7 +437,7 @@
 <li>假定配置了一组4个文件,每个为1GB作为redolog空间,下图中writepos为日志记录位置,checkpoint为擦拭位置也就是写磁盘的位置</li>
 <li>若writepos追上checkpoint,表示日志内存满了,这个时候就需要停止新的更新,优先擦拭记录;</li>
 </ul>
-<p><img src="http://pl5cg4rhb.bkt.clouddn.com/mysql-2-1.png" alt="图片"></p>
+<p><img src="https://i.loli.net/2019/03/04/5c7d2c57e4b9f.png" alt="图片"></p>
 <h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><ul>
 <li>redolog的方式使得InnoDB有了<strong>crash-safe</strong>的能力,哪怕数据库发生异常重启,已经发生的操作也已经存入内存(redolog)不会受到影响</li>
 </ul>
@@ -458,7 +458,7 @@
 <li>执行器生成这个操作binlog,并将binlog写入磁盘;</li>
 <li>执行器调用引擎提交事务接口,引擎将redolog改成commit状态,更新完成;</li>
 </ul>
-<p><img src="http://pl5cg4rhb.bkt.clouddn.com/mysql-2-2.png" alt="图片"></p>
+<p><img src="https://i.loli.net/2019/03/04/5c7d2c581b558.png" alt="图片"></p>
 <hr>
 <h2 id="两阶段提交设计"><a href="#两阶段提交设计" class="headerlink" title="两阶段提交设计"></a>两阶段提交设计</h2><h3 id="问题的抛出"><a href="#问题的抛出" class="headerlink" title="问题的抛出"></a>问题的抛出</h3><p>在上面的update的语句执行流程可以发现,redolog会先进入prepare状态,然后写binlog最后提交事务使得redolog进行commit,那么为什么要这么去设计?</p>
 <h3 id="数据写入和恢复"><a href="#数据写入和恢复" class="headerlink" title="数据写入和恢复"></a>数据写入和恢复</h3><ul>

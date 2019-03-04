@@ -3,7 +3,7 @@ title: MySQL系列-4-事务隔离
 date: 2018-10-26
 tags: mysql
 ---
-![图片](http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png)
+![图片](https://i.loli.net/2019/03/04/5c7d2be89808d.png)
 >本篇主要介绍MySQL中事务隔离以及关于隔离级别原理和优化的认识;
 
 <!-- more -->
@@ -92,7 +92,7 @@ mysql> show variables like 'transaction_isolation';
 * 分析
   * 正是因为在开启事务的同时也创建了对应这个事务时刻的视图,所以对于每个事务来说,只是去处理视图里的内容,这也是数据库的多版本并发控制(MVCC);
 
-![图片](http://pl5cg4rhb.bkt.clouddn.com/mysql-4-2.png)
+![图片](https://i.loli.net/2019/03/04/5c7d2d0cc7835.png)
 
 ### 潜在风险
 * 问题

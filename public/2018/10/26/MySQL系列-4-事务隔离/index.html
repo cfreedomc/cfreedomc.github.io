@@ -125,13 +125,13 @@
 <meta property="og:site_name" content="Cfreedomc&#39;s Blog">
 <meta property="og:description" content="本篇主要介绍MySQL中事务隔离以及关于隔离级别原理和优化的认识;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/mysql-4-2.png">
-<meta property="og:updated_time" content="2019-01-28T12:19:31.024Z">
+<meta property="og:image" content="https://i.loli.net/2019/03/04/5c7d2be89808d.png">
+<meta property="og:image" content="https://i.loli.net/2019/03/04/5c7d2d0cc7835.png">
+<meta property="og:updated_time" content="2019-03-04T13:50:13.469Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL系列-4-事务隔离">
 <meta name="twitter:description" content="本篇主要介绍MySQL中事务隔离以及关于隔离级别原理和优化的认识;">
-<meta name="twitter:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
+<meta name="twitter:image" content="https://i.loli.net/2019/03/04/5c7d2be89808d.png">
 
 
 
@@ -403,7 +403,7 @@
       
 
       
-        <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png" alt="图片"></p>
+        <p><img src="https://i.loli.net/2019/03/04/5c7d2be89808d.png" alt="图片"></p>
 <blockquote>
 <p>本篇主要介绍MySQL中事务隔离以及关于隔离级别原理和优化的认识;</p>
 </blockquote>
@@ -534,7 +534,7 @@
 </ul>
 </li>
 </ul>
-<p><img src="http://pl5cg4rhb.bkt.clouddn.com/mysql-4-2.png" alt="图片"></p>
+<p><img src="https://i.loli.net/2019/03/04/5c7d2d0cc7835.png" alt="图片"></p>
 <h3 id="潜在风险"><a href="#潜在风险" class="headerlink" title="潜在风险"></a>潜在风险</h3><ul>
 <li>问题<ul>
 <li>在上面的原理中我们不难发现,在每个事务开启的时候都会生成回滚段以及视图,如果事务小还好,那么如果出现长事务,这些对应事务存在的回滚段和视图是否会成为占用内存的大户呢?</li>

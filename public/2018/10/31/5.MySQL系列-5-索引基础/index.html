@@ -125,16 +125,16 @@
 <meta property="og:site_name" content="Cfreedomc&#39;s Blog">
 <meta property="og:description" content="本篇主要介绍MySQL中关于索引的底层结构以及InnoDB的索引基础概念;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/mysql5-1.png">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/mysql5-2.png">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/mysql5-3.png">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/mysql5-4.png">
-<meta property="og:updated_time" content="2019-01-28T12:28:01.566Z">
+<meta property="og:image" content="https://i.loli.net/2019/03/04/5c7d2be89808d.png">
+<meta property="og:image" content="https://i.loli.net/2019/03/04/5c7d2d0cc7835.png">
+<meta property="og:image" content="https://i.loli.net/2019/03/04/5c7d2d379a558.png">
+<meta property="og:image" content="https://i.loli.net/2019/03/04/5c7d2d37adeef.png">
+<meta property="og:image" content="https://i.loli.net/2019/03/04/5c7d2d37b0f98.png">
+<meta property="og:updated_time" content="2019-03-04T13:51:37.332Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL系列-5-索引基础">
 <meta name="twitter:description" content="本篇主要介绍MySQL中关于索引的底层结构以及InnoDB的索引基础概念;">
-<meta name="twitter:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
+<meta name="twitter:image" content="https://i.loli.net/2019/03/04/5c7d2be89808d.png">
 
 
 
@@ -406,7 +406,7 @@
       
 
       
-        <p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png" alt="图片"></p>
+        <p><img src="https://i.loli.net/2019/03/04/5c7d2be89808d.png" alt="图片"></p>
 <blockquote>
 <p>本篇主要介绍MySQL中关于索引的底层结构以及InnoDB的索引基础概念;</p>
 </blockquote>
@@ -423,7 +423,7 @@
 </ul>
 </li>
 </ul>
-<p><img src="http://pl5cg4rhb.bkt.clouddn.com/mysql5-1.png" alt="图片"></p>
+<p><img src="https://i.loli.net/2019/03/04/5c7d2d0cc7835.png" alt="图片"></p>
 <ul>
 <li>哈希结构优缺点<ul>
 <li>优点:支持快速的增删</li>
@@ -441,7 +441,7 @@
 </li>
 <li>如下图所示</li>
 </ul>
-<p><img src="http://pl5cg4rhb.bkt.clouddn.com/mysql5-2.png" alt="图片"></p>
+<p><img src="https://i.loli.net/2019/03/04/5c7d2d379a558.png" alt="图片"></p>
 <ul>
 <li>有序数组的优缺点:<ul>
 <li>优点:因为有序,所以可以快速的进行等值以及区间查询</li>
@@ -459,7 +459,7 @@
 </li>
 <li>下图为二叉树的结构</li>
 </ul>
-<p><img src="http://pl5cg4rhb.bkt.clouddn.com/mysql5-3.png" alt="图片"></p>
+<p><img src="https://i.loli.net/2019/03/04/5c7d2d37adeef.png" alt="图片"></p>
 <ul>
 <li>搜索树的优缺点<ul>
 <li>优点:,查询和更改都快</li>
@@ -486,7 +486,7 @@
 </li>
 <li>举例:如现在有主键索引ID和非主键索引k,其结构如下图</li>
 </ul>
-<p><img src="http://pl5cg4rhb.bkt.clouddn.com/mysql5-4.png" alt="图片"></p>
+<p><img src="https://i.loli.net/2019/03/04/5c7d2d37b0f98.png" alt="图片"></p>
 <ul>
 <li>索引的流程<ul>
 <li>由于如上图结构的存在,所以当我们使用k索引进行查询时,会先从k的索引树先查询到主键索引值,再通过主键索引查询到对应行数据(这个过程称之为<strong>回表</strong>)</li>
