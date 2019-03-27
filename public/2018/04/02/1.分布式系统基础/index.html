@@ -126,8 +126,8 @@
 <meta property="og:description" content="本篇主要介绍分布式系统的演化过程;">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo7page.png">
-<meta property="og:image" content="http://pl5cg4rhb.bkt.clouddn.com/dubbo-architecture-roadmap.jpg">
-<meta property="og:updated_time" content="2019-01-28T12:19:31.018Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/cfreedomc/picture/master/img/dubbo-architecture-roadmap.jpg">
+<meta property="og:updated_time" content="2019-03-26T09:28:33.311Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dubbo系列-1-分布式系统介绍">
 <meta name="twitter:description" content="本篇主要介绍分布式系统的演化过程;">
@@ -410,7 +410,7 @@
 <a id="more"></a>
 <h1 id="分布式系统"><a href="#分布式系统" class="headerlink" title="分布式系统"></a>分布式系统</h1><h2 id="什么是分布式系统？"><a href="#什么是分布式系统？" class="headerlink" title="什么是分布式系统？"></a>什么是分布式系统？</h2><p>《分布式系统原理范型》定义:分布式系统[distributed system]是若干<strong>独立</strong>计算机的<strong>集合</strong>，这些计算机对于用户来说就像单个相关系统；</p>
 <h2 id="为何要用分布式系统？"><a href="#为何要用分布式系统？" class="headerlink" title="为何要用分布式系统？"></a>为何要用分布式系统？</h2><p>因为随着互联网的发展，访问量的指数级上升后，原有的系统架构无法满足要求，需要一种新的系统架构解决高并发，高可用的场景；<br>ps：所以所有的程序乃至架构的变革都是因为业务的需要，所以编程都要从业务出发，离开业务的编程，应该是一个笑话；</p>
-<h2 id="分布式系统的演化？"><a href="#分布式系统的演化？" class="headerlink" title="分布式系统的演化？"></a>分布式系统的演化？</h2><h3 id="经典的架构演变图"><a href="#经典的架构演变图" class="headerlink" title="经典的架构演变图"></a><strong>经典的架构演变图</strong></h3><p><img src="http://pl5cg4rhb.bkt.clouddn.com/dubbo-architecture-roadmap.jpg" alt="图片"><br>是从单一应用架构–&gt;垂直架构–&gt;分布式架构–&gt;SOA的结果</p>
+<h2 id="分布式系统的演化？"><a href="#分布式系统的演化？" class="headerlink" title="分布式系统的演化？"></a>分布式系统的演化？</h2><h3 id="经典的架构演变图"><a href="#经典的架构演变图" class="headerlink" title="经典的架构演变图"></a><strong>经典的架构演变图</strong></h3><p><img src="https://raw.githubusercontent.com/cfreedomc/picture/master/img/dubbo-architecture-roadmap.jpg" alt="picture"><br>是从单一应用架构–&gt;垂直架构–&gt;分布式架构–&gt;SOA的结果</p>
 <h3 id="单一架构"><a href="#单一架构" class="headerlink" title="单一架构"></a>单一架构</h3><p>单一架构是所有应用都在一个服务器中，功能之间的调用都在内存中即可，如果需要扩展也只能进行横向的复制操作；（即将整个服务器中的应用复制一份到另一个服务器中）；<br>问题：<br>1.应用之间耦合性过大<br>2.负载能力差</p>
 <h3 id="垂直架构"><a href="#垂直架构" class="headerlink" title="垂直架构"></a>垂直架构</h3><p>垂直架构相比于单一架构，其开始在功能上进行优化，将相关性或无相关性的应用拆分部署在不同的服务器上，不仅提高了并发性能，同时也在系统迭代等问题上提供了解决办法；<br>问题：<br>1.要求无相关性，但是现实场景下，是很难有应用之间是无相关的，所以应用之间是需要通讯的，而通讯在垂直应用之间就比较麻烦了；<br>2.服务和前端展示的更新频率不一致，垂直架构还没有做到分离；</p>
 <h3 id="分布式服务架构-RPC"><a href="#分布式服务架构-RPC" class="headerlink" title="分布式服务架构(RPC)"></a>分布式服务架构(RPC)</h3><p>RPC[Remote Procedure Call]远程过程调用，是一种进程间的通行方式，是思想不是规范,其是当垂直应用越来越多，应用之间交互不可避免，将核心业务抽取出来，作为独立的服务，逐渐形成稳定的服务中心，使前端应用能更快速的响应多变的市场需求。此时，用于提高业务复用及整合的分布式服务框架(RPC)是关键;</p>
