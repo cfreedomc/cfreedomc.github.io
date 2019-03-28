@@ -3,7 +3,6 @@ title: MySQL系列-4-事务隔离
 date: 2018-10-26
 tags: mysql
 ---
-![图片](https://i.loli.net/2019/03/04/5c7d2be89808d.png)
 >本篇主要介绍MySQL中事务隔离以及关于隔离级别原理和优化的认识;
 
 <!-- more -->

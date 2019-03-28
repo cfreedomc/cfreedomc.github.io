@@ -3,7 +3,6 @@ title: Spring Boot使用系列-多数据源
 date: 2019-2-10
 tags: spring
 ---
-![图片](https://i.loli.net/2019/03/04/5c7d2ed7d287c.jpg)
 >在很多系统的应用中我们不可避免的需要用到多数据源的情况,如果用最原始的jdbc当然是可以实现的,但是在现在高度使用spring家族的前提下如何使用spring boot结合多数据源值得关注,所以这边进行了简单的记录;
 
 <!-- more -->
