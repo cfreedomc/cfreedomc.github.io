@@ -96,20 +96,28 @@
 
 
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Cfreedomc">
-<meta property="og:url" content="http://yoursite.com/archives/2018/10/index.html">
+  <meta name="description" content="本篇主要介绍如何基于Springboot实现基于注解的aop增强,为接下来使用注解动态切换数据源提供基础;">
+<meta name="keywords" content="dynamic-datasource">
+<meta property="og:type" content="article">
+<meta property="og:title" content="动态数据源系列-1-基于注解的aop实现">
+<meta property="og:url" content="http://yoursite.com/2019/04/28/1.动态数据源系列-1-aop/index.html">
 <meta property="og:site_name" content="Cfreedomc">
+<meta property="og:description" content="本篇主要介绍如何基于Springboot实现基于注解的aop增强,为接下来使用注解动态切换数据源提供基础;">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/cfreedomc/picture/master/img/%E5%8A%A8%E6%80%81%E6%95%B0%E6%8D%AE%E6%BA%90-1-1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/cfreedomc/picture/master/img/%E5%8A%A8%E6%80%81%E6%95%B0%E6%8D%AE%E6%BA%901-2.png">
+<meta property="og:updated_time" content="2019-04-27T13:37:13.096Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Cfreedomc">
+<meta name="twitter:title" content="动态数据源系列-1-基于注解的aop实现">
+<meta name="twitter:description" content="本篇主要介绍如何基于Springboot实现基于注解的aop增强,为接下来使用注解动态切换数据源提供基础;">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/cfreedomc/picture/master/img/%E5%8A%A8%E6%80%81%E6%95%B0%E6%8D%AE%E6%BA%90-1-1.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2018/10/">
+  <link rel="canonical" href="http://yoursite.com/2019/04/28/1.动态数据源系列-1-aop/">
 
 
 
@@ -119,7 +127,7 @@
   };
 </script>
 
-  <title>Archive | Cfreedomc</title>
+  <title>动态数据源系列-1-基于注解的aop实现 | Cfreedomc</title>
   
 
 
@@ -167,7 +175,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -286,25 +294,6 @@
   
     
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
   
 
   
@@ -350,183 +339,239 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  
+    <div class="reading-progress-bar"></div>
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/28/1.动态数据源系列-1-aop/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="cfreedomc">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cfreedomc">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">动态数据源系列-1-基于注解的aop实现
+
+              
+            
+          </h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-04-28 00:00:00" itemprop="dateCreated datePublished" datetime="2019-04-28T00:00:00+08:00">2019-04-28</time>
+            
+
+            
+          </span>
+
           
-        
-        Um..! 16 posts in total. Keep on posting.
-      </span>
-      
 
-      
-
-        
-        
-        
-
-        
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2018">2018</h1>
-          </div>
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2018/10/31/5.MySQL系列-5-索引基础/" itemprop="url">
             
-              <span itemprop="name">MySQL系列-5-索引基础</span>
             
-          </a>
-        
-      </h2>
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">Comments: </span>
+                <a href="/2019/04/28/1.动态数据源系列-1-aop/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/04/28/1.动态数据源系列-1-aop/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-10-31T00:00:00+08:00" content="2018-10-31">
-          10-31
-        </time>
-      </div>
+          
+          
+            <span id="/2019/04/28/1.动态数据源系列-1-aop/" class="leancloud_visitors" data-flag-title="动态数据源系列-1-基于注解的aop实现">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
 
-    </header>
-  </article>
+          
 
+          
 
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2018/10/26/MySQL系列-4-事务隔离/" itemprop="url">
-            
-              <span itemprop="name">MySQL系列-4-事务隔离</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-10-26T00:00:00+08:00" content="2018-10-26">
-          10-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2018/10/16/2.MySQL系列-2-更新语句执行/" itemprop="url">
-            
-              <span itemprop="name">MySQL系列-2-更新语句执行介绍</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-10-16T00:00:00+08:00" content="2018-10-16">
-          10-16
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <blockquote>
+<p>本篇主要介绍如何基于Springboot实现基于注解的aop增强,为接下来使用注解动态切换数据源提供基础;</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="AOP概念"><a href="#AOP概念" class="headerlink" title="AOP概念"></a>AOP概念</h2><h3 id="AOP基础概念"><a href="#AOP基础概念" class="headerlink" title="AOP基础概念"></a>AOP基础概念</h3><p>网上AOP的概念非常之多,在这边主要关注切面,切入点以及增强类的方向,关于增强的通识要了解以下问题</p>
+<ul>
+<li><strong>何处</strong>:在哪里增强?</li>
+<li><strong>何时</strong>:什么时候进行增强?</li>
+<li><strong>何种</strong>增强的内容是什么?</li>
+</ul>
+<h3 id="AOP细节"><a href="#AOP细节" class="headerlink" title="AOP细节"></a>AOP细节</h3><ul>
+<li>Advisor<ul>
+<li>好多地方翻译通知,这里理解增强就可以,本质就是需要在目标上进行增强的操作都在这里编写;</li>
+<li>解决问题:<strong>切入内容以及切入时机</strong></li>
+</ul>
+</li>
+<li>PointCut<ul>
+<li>切点,表示具体哪里进行增强</li>
+<li>解决问题:<strong>何处</strong></li>
+</ul>
+</li>
+</ul>
+<h2 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h2><h3 id="配置及细节"><a href="#配置及细节" class="headerlink" title="配置及细节"></a>配置及细节</h3><h4 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h4><p><img src="https://raw.githubusercontent.com/cfreedomc/picture/master/img/%E5%8A%A8%E6%80%81%E6%95%B0%E6%8D%AE%E6%BA%90-1-1.png" alt=""></p>
+<h4 id="pom-xml"><a href="#pom-xml" class="headerlink" title="pom.xml"></a>pom.xml</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependencies&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;lombok&lt;/artifactId&gt;</span><br><span class="line">        &lt;optional&gt;true&lt;/optional&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;spring-boot-starter-aop&lt;/artifactId&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;</span><br><span class="line">        &lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">&lt;/dependencies&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="META-INF-factories"><a href="#META-INF-factories" class="headerlink" title="META-INF/factories"></a>META-INF/factories</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">org.springframework.boot.autoconfigure.EnableAutoConfiguration=\</span><br><span class="line">com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAutoConfiguration</span><br></pre></td></tr></table></figure>
+<h3 id="创建AOP元素"><a href="#创建AOP元素" class="headerlink" title="创建AOP元素"></a>创建AOP元素</h3><h4 id="创建切面"><a href="#创建切面" class="headerlink" title="创建切面"></a>创建切面</h4><ul>
+<li><p>继承AbstractPointCutAdvisor</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public class PointCutAdvisor extends AbstractPointcutAdvisor &#123;</span><br><span class="line"></span><br><span class="line">    private Advice interceptor;</span><br><span class="line">    private Pointcut pointcut;</span><br><span class="line"></span><br><span class="line">    public PointCutAdvisor(Advice interceptor) &#123;</span><br><span class="line">        this.interceptor = interceptor;</span><br><span class="line">        this.pointcut = buildPointCut();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 确定切点为@Freedom注解/</span><br><span class="line">     */</span><br><span class="line">private Pointcut buildPointCut() &#123;</span><br><span class="line">        Pointcut cpc = new AnnotationMatchingPointcut(Freedom.class, true);</span><br><span class="line">        Pointcut mpc = AnnotationMatchingPointcut./forMethodAnnotation/(Freedom.class);</span><br><span class="line">        return new ComposablePointcut(cpc).union(mpc);</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    public Pointcut getPointcut() &#123;</span><br><span class="line">        return this.pointcut;</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    public Advice getAdvice() &#123;</span><br><span class="line">        return this.interceptor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编写增强类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@Slf4j</span><br><span class="line">public class MyInterceptor implements MethodInterceptor &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     *  增强内容</span><br><span class="line">     */</span><br><span class="line">@Override</span><br><span class="line">    public Object invoke(MethodInvocation methodInvocation) throws Throwable &#123;</span><br><span class="line"></span><br><span class="line">        /log/.info(&quot; Be Stronger&quot;);</span><br><span class="line">        return methodInvocation.proceed();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="初始化aop内容"><a href="#初始化aop内容" class="headerlink" title="初始化aop内容"></a>初始化aop内容</h4><ol>
+<li>初始化切面</li>
+<li>注入增强类<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Configurable</span><br><span class="line">public class MyConfig &#123;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public PointCutAdvisor pointCutAdvisor()&#123;</span><br><span class="line">        MyInterceptor myInterceptor = new MyInterceptor();</span><br><span class="line">        return new PointCutAdvisor(myInterceptor);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="编写目标代码"><a href="#编写目标代码" class="headerlink" title="编写目标代码"></a>编写目标代码</h3><h4 id="代码细节"><a href="#代码细节" class="headerlink" title="代码细节"></a>代码细节</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Freedom</span><br><span class="line">public void myMethod()&#123;</span><br><span class="line">  log.info(&quot;I am working&quot; );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="输出结果"><a href="#输出结果" class="headerlink" title="输出结果"></a>输出结果</h4><p><img src="https://raw.githubusercontent.com/cfreedomc/picture/master/img/%E5%8A%A8%E6%80%81%E6%95%B0%E6%8D%AE%E6%BA%901-2.png" alt=""></p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2018/10/11/1.MySQL系列-1-查询语句执行/" itemprop="url">
-            
-              <span itemprop="name">MySQL系列-1-查询语句执行介绍</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-10-11T00:00:00+08:00" content="2018-10-11">
-          10-11
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/dynamic-datasource/" rel="tag"># dynamic-datasource</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/15/Sharding-JDBC学习-概念-1/" rel="next" title="Sharding-JDBC学习-概念-1">
+                <i class="fa fa-chevron-left"></i> Sharding-JDBC学习-概念-1
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+  </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
 
         </div>
         
@@ -546,8 +591,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -637,6 +691,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#AOP概念"><span class="nav-number">1.</span> <span class="nav-text">AOP概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AOP基础概念"><span class="nav-number">1.1.</span> <span class="nav-text">AOP基础概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOP细节"><span class="nav-number">1.2.</span> <span class="nav-text">AOP细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具体实现"><span class="nav-number">2.</span> <span class="nav-text">具体实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置及细节"><span class="nav-number">2.1.</span> <span class="nav-text">配置及细节</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#目录结构"><span class="nav-number">2.1.1.</span> <span class="nav-text">目录结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pom-xml"><span class="nav-number">2.1.2.</span> <span class="nav-text">pom.xml</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#META-INF-factories"><span class="nav-number">2.1.3.</span> <span class="nav-text">META-INF/factories</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建AOP元素"><span class="nav-number">2.2.</span> <span class="nav-text">创建AOP元素</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建切面"><span class="nav-number">2.2.1.</span> <span class="nav-text">创建切面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#初始化aop内容"><span class="nav-number">2.2.2.</span> <span class="nav-text">初始化aop内容</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写目标代码"><span class="nav-number">2.3.</span> <span class="nav-text">编写目标代码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#代码细节"><span class="nav-number">2.3.1.</span> <span class="nav-text">代码细节</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#输出结果"><span class="nav-number">2.3.2.</span> <span class="nav-text">输出结果</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
@@ -771,6 +842,10 @@
 
 
   
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
 
   
 
@@ -816,6 +891,8 @@
 
 
 
+
+  
 
 
   
@@ -1147,38 +1224,37 @@
   
   <script>
     
-    function showTime(Counter) {
-      var entries = [];
+    function addCount(Counter) {
       var $visitors = $('.leancloud_visitors');
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
 
-      $visitors.each(function() {
-        entries.push( $(this).attr('id').trim() );
-      });
-
-      Counter('get', '/classes/Counter', { where: JSON.stringify({ url: { '$in': entries } }) })
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
         .done(function({ results }) {
-          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
-
-          if (results.length === 0) {
-            $visitors.find(COUNT_CONTAINER_REF).text(0);
-            return;
-          }
-
-          for (var i = 0; i < results.length; i++) {
-            var item = results[i];
-            var url = item.url;
-            var time = item.time;
-            var element = document.getElementById(url);
-
-            $(element).find(COUNT_CONTAINER_REF).text(time);
-          }
-          for (var i = 0; i < entries.length; i++) {
-            var url = entries[i];
-            var element = document.getElementById(url);
-            var countSpan = $(element).find(COUNT_CONTAINER_REF);
-            if (countSpan.text() == '') {
-              countSpan.text(0);
-            }
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', '/classes/Counter/' + counter.objectId, JSON.stringify({ time: { '__op': 'Increment', 'amount': 1 } }))
+            
+              .done(function() {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.time + 1);
+              })
+            
+              .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+              })
+          } else {
+            
+              Counter('post', '/classes/Counter', JSON.stringify({ title: title, url: url, time: 1 }))
+                .done(function() {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(1);
+                })
+                .fail(function() {
+                  console.log('Failed to create');
+                });
+            
           }
         })
         .fail(function ({ responseJSON }) {
@@ -1203,9 +1279,7 @@
             });
           };
           
-            if ($('.post-title-link').length >= 1) {
-              showTime(Counter);
-            }
+            addCount(Counter);
           
         });
     });
